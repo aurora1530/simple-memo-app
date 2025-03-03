@@ -1,11 +1,10 @@
 import { serve } from '@hono/node-server'
 import { Hono } from 'hono'
+import indexApp from './routes/index.js'
 
 const app = new Hono()
 
-app.get('/', (c) => {
-  return c.text('Hello Hono!')
-})
+app.route('/', indexApp);
 
 serve({
   fetch: app.fetch,
