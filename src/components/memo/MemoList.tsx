@@ -14,6 +14,7 @@ const MemoList = async ({ memos }: MemoListProps) => {
           <div className="memo-body">{memo.body}</div>
           <div className="memo-dates">Updated: {formatDate(memo.updatedAt)}</div>
           <div className="memo-dates">Created: {formatDate(memo.createdAt)}</div>
+          <div><a href={`/memo/edit/${memo.id}`}>Edit</a></div>
         </div>
       ))}
     </div>

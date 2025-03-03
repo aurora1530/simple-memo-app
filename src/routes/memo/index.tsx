@@ -101,6 +101,103 @@ memoApp
 
       return c.redirect('/memo');
     }
+  )
+  .get('edit/:id', async (c) => {
+    const session = c.get('session')!;
+    const user = await prisma.user.findUnique({
+      where: {
+        username: session.username,
+      },
+    });
+
+    if (!user) {
+      return c.redirect('/auth/login');
+    }
+
+    const memoId = c.req.param('id');
+    const memo = await prisma.memo.findUnique({
+      where: {
+        id: parseInt(memoId),
+      },
+    });
+
+    const isUserMemo = memo?.userId === user.id;
+    if (!isUserMemo) {
+      // 403 Forbidden
+      return c.status(404);
+    }
+
+    return c.html(
+      <Layout c={c} title="Edit Memo">
+        <form method="post">
+          <div>
+            <label>
+              Title
+              <input type="text" name="title" value={memo.title} />
+            </label>
+          </div>
+          <div>
+            <label>
+              Body
+              <textarea name="body">{memo.body}</textarea>
+            </label>
+          </div>
+          <div>
+            <button type="submit">Update</button>
+          </div>
+        </form>
+      </Layout>
+    );
+  })
+  .post(
+    'edit/:id',
+    zValidator(
+      'form',
+      z.object({
+        title: z.string(),
+        body: z.string(),
+      })
+    ),
+    async (c) => {
+      const session = c.get('session')!;
+      const user = await prisma.user.findUnique({
+        where: {
+          username: session.username,
+        },
+      });
+
+      if (!user) {
+        return c.redirect('/auth/login');
+      }
+
+      const memoId = c.req.param('id');
+      const memo = await prisma.memo.findUnique({
+        where: {
+          id: parseInt(memoId),
+        },
+      });
+
+      const isUserMemo = memo?.userId === user.id;
+      if (!isUserMemo) {
+        // 403 Forbidden
+        return c.status(404);
+      }
+
+      const { title, body } = c.req.valid('form');
+
+      await prisma.memo.update({
+        where: {
+          id: parseInt(memoId),
+        },
+        data: {
+          title,
+          body,
+          updatedAt: new Date(),
+        },
+      });
+
+      return c.redirect('/memo');
+    }
   );
 
 export default memoApp;
