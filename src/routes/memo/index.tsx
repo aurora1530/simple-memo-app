@@ -1,17 +1,17 @@
-import { type Env, Hono } from 'hono';
-import { ensureLoginedMiddleware } from '../../sessionMiddleware.js';
+import { Hono } from 'hono';
+import { ensureLoginedMiddleware, type LoginedEnv } from '../../sessionMiddleware.js';
 import prisma from '../../prisma.js';
 import MemoList from '../../components/memo/MemoList.js';
 import MemoForm from '../../components/memo/MemoForm.js';
 import { memoValidation } from './validation.js';
 import { css } from 'hono/css';
 
-const memoApp = new Hono<Env>();
+const memoApp = new Hono<LoginedEnv>();
 memoApp.use(ensureLoginedMiddleware);
 
 // メモ一覧
 memoApp.get('/', async (c) => {
-  const session = c.get('session')!;
+  const session = c.get('session');
 
   const memos = await prisma.memo.findMany({
     where: {
@@ -70,7 +70,7 @@ memoApp
     });
   })
   .post('/create', memoValidation('create'), async (c) => {
-    const session = c.get('session')!;
+    const session = c.get('session');
     const { title, body } = c.req.valid('form');
 
     await prisma.memo.create({
@@ -85,7 +85,7 @@ memoApp
     return c.redirect('/memo');
   })
   .get('edit/:id', async (c) => {
-    const session = c.get('session')!;
+    const session = c.get('session');
 
     const memoId = c.req.param('id');
     const memo = await prisma.memo.findUnique({
@@ -107,7 +107,7 @@ memoApp
     );
   })
   .post('edit/:id', memoValidation('edit'), async (c) => {
-    const session = c.get('session')!;
+    const session = c.get('session');
 
     const memoId = c.req.param('id');
 
@@ -159,7 +159,7 @@ memoApp
     return c.redirect('/memo');
   })
   .delete('delete/:id', async (c) => {
-    const session = c.get('session')!;
+    const session = c.get('session');
 
     const memoId = c.req.param('id');
     const memo = await prisma.memo.delete({

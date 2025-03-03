@@ -22,6 +22,8 @@ export const sessionMiddleware = createMiddleware<Env>(async (c, next) => {
   await next();
 });
 
+export type LoginedEnv = Env & { Variables: { session: Session } };
+
 export const ensureLoginedMiddleware = createMiddleware<Env>(async (c, next) => {
   const session = c.get('session');
   if (!session?.userID) {
