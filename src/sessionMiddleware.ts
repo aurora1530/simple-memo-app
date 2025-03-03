@@ -21,3 +21,12 @@ export const sessionMiddleware = createMiddleware<Env>(async (c, next) => {
   c.set('session', session);
   await next();
 });
+
+export const ensureLoginedMiddleware = createMiddleware<Env>(async (c, next) => {
+  const session = c.get('session');
+  if (!session?.isLogin) {
+    return c.redirect('/auth/login');
+  }
+
+  await next();
+});
