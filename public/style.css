@@ -1,0 +1,18 @@
+.memo {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+.memo-title {
+  font-size: 1.2em;
+  font-weight: bold;
+}
+.memo-body {
+  margin: 10px 0;
+}
+.memo-dates {
+  font-size: 0.8em;
+  color: #666;
+}
