@@ -4,9 +4,43 @@ import prisma from '../../prisma.js';
 import MemoList from '../../components/memo/MemoList.js';
 import { zValidator } from '@hono/zod-validator';
 import { z } from 'zod';
+import { jsxRenderer } from 'hono/jsx-renderer';
+import { css, Style } from 'hono/css';
 
 const memoApp = new Hono<Env>();
 memoApp.use(ensureLoginedMiddleware);
+
+memoApp.use(
+  jsxRenderer(({ children, Layout }) => {
+    return (
+      <Layout>
+        <Style>
+          {css`
+            .memo {
+              border: 1px solid #ccc;
+              padding: 10px;
+              margin: 10px 0;
+              border-radius: 5px;
+              background-color: #f9f9f9;
+            }
+            .memo-title {
+              font-size: 1.2em;
+              font-weight: bold;
+            }
+            .memo-body {
+              margin: 10px 0;
+            }
+            .memo-dates {
+              font-size: 0.8em;
+              color: #666;
+            }
+          `}
+        </Style>
+        {children}
+      </Layout>
+    );
+  })
+);
 
 memoApp
   .get('/', async (c) => {
