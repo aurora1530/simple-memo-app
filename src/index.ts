@@ -12,7 +12,6 @@ const app = new Hono()
 app.use(logger());
 app.use(serveStatic({ root: 'public' }));
 app.use(secureHeaders());
-app.use(csrf());
 app.use(sessionMiddleware);
 app.route('/', indexApp);
 
