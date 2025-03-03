@@ -125,6 +125,21 @@ memoApp
 
     const { title, body } = c.req.valid('form');
 
+    const notChanged = memo?.title === title && memo?.body === body;
+    if (notChanged) {
+      return c.render(
+        <MemoForm
+          submitLabel="更新"
+          defaultTitle={title}
+          defaultBody={body}
+          errorMessages={['変更がありません']}
+        />,
+        {
+          title: 'Edit Memo',
+        }
+      );
+    }
+
     await prisma.memo.update({
       where: {
         id: memoId,
