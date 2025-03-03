@@ -47,15 +47,37 @@ const MemoList = async ({ memos }: MemoListProps) => {
   `;
 
   const memoActionsClass = css`
-    text-align: right;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 12px;
   `;
 
-  const memoActionsLinkClass = css`
+  // 編集ボタンは強調するため、背景色・文字色・パディングを設定
+  const editButtonClass = css`
+    background-color: #007bff;
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 4px;
     text-decoration: none;
-    color: #007bff;
-    font-weight: 500;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
     &:hover {
-      text-decoration: underline;
+      background-color: #0056b3;
+    }
+  `;
+
+  // 削除ボタンは目立ちすぎないように、控えめな色合いに変更
+  const deleteButtonClass = css`
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    border-radius: 4px;
+    padding: 6px 12px;
+    font-size: 0.9em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    &:hover {
+      background-color: #f1b0b7;
     }
   `;
 
@@ -67,17 +89,21 @@ const MemoList = async ({ memos }: MemoListProps) => {
   };
 
   return (
-    <div className={memoContainerClass}>
+    <div class={memoContainerClass}>
+      <script src="memoDelete.js"></script>
       {memos.map((memo) => (
-        <div key={memo.id} className={memoCardClass}>
-          <div className={memoTitleClass}>{memo.title}</div>
-          <div className={memoBodyClass}>{cutDownedBody(memo.body)}</div>
-          <div className={memoDatesClass}>Updated: {formatDate(memo.updatedAt)}</div>
-          <div className={memoDatesClass}>Created: {formatDate(memo.createdAt)}</div>
-          <div className={memoActionsClass}>
-            <a className={memoActionsLinkClass} href={`/memo/edit/${memo.id}`}>
+        <div key={memo.id} class={memoCardClass}>
+          <div class={memoTitleClass}>{memo.title}</div>
+          <div class={memoBodyClass}>{cutDownedBody(memo.body)}</div>
+          <div class={memoDatesClass}>Updated: {formatDate(memo.updatedAt)}</div>
+          <div class={memoDatesClass}>Created: {formatDate(memo.createdAt)}</div>
+          <div class={memoActionsClass}>
+            <a class={editButtonClass} href={`/memo/edit/${memo.id}`}>
               Edit
             </a>
+            <button class={deleteButtonClass} onclick={`deleteMemo("${memo.id}")`}>
+              Delete
+            </button>
           </div>
         </div>
       ))}

@@ -132,6 +132,19 @@ memoApp
     });
 
     return c.redirect('/memo');
+  })
+  .delete('delete/:id', async (c) => {
+    const session = c.get('session')!;
+
+    const memoId = c.req.param('id');
+    const memo = await prisma.memo.delete({
+      where: {
+        id: memoId,
+        userId: session.userID,
+      },
+    });
+
+    return c.json({ memo });
   });
 
 export default memoApp;
