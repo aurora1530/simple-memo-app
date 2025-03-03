@@ -85,7 +85,7 @@ memoApp
     const memoId = c.req.param('id');
     const memo = await prisma.memo.findUnique({
       where: {
-        id: parseInt(memoId),
+        id: memoId,
       },
     });
 
@@ -108,7 +108,7 @@ memoApp
     const memoId = c.req.param('id');
     const memo = await prisma.memo.findUnique({
       where: {
-        id: parseInt(memoId),
+        id: memoId,
       },
     });
 
@@ -122,7 +122,7 @@ memoApp
 
     await prisma.memo.update({
       where: {
-        id: parseInt(memoId),
+        id: memoId,
       },
       data: {
         title,
