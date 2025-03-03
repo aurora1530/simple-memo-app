@@ -4,8 +4,8 @@ import { createMiddleware } from 'hono/factory';
 import { getIronSession } from 'iron-session';
 
 export interface Session {
+  userID: number;
   username: string;
-  isLogin: boolean;
 }
 
 export const getSession = async (c: Context)=>{
@@ -24,7 +24,7 @@ export const sessionMiddleware = createMiddleware<Env>(async (c, next) => {
 
 export const ensureLoginedMiddleware = createMiddleware<Env>(async (c, next) => {
   const session = c.get('session');
-  if (!session?.isLogin) {
+  if (!session?.userID) {
     return c.redirect('/auth/login');
   }
 

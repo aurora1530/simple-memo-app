@@ -20,7 +20,7 @@ export const Layout = ({ c, title, children }: PropsWithChildren<LayoutProps>) =
         <header>
           <nav>
             <div><a href="/">Home</a></div>
-            {session?.isLogin ? (
+            {session?.username ? (
               <>
                 <p>UserName: {session.username}</p>
                 <a href="/auth/logout">Logout</a>

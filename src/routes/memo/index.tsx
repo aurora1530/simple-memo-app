@@ -13,19 +13,9 @@ memoApp
   .get('/', async (c) => {
     const session = c.get('session')!;
 
-    const user = await prisma.user.findUnique({
-      where: {
-        username: session.username,
-      },
-    });
-
-    if (!user) {
-      return c.redirect('/auth/login');
-    }
-
     const memos = await prisma.memo.findMany({
       where: {
-        userId: user.id,
+        userId: session.userID,
       },
       orderBy: {
         updatedAt: 'desc',
@@ -78,15 +68,6 @@ memoApp
     ),
     async (c) => {
       const session = c.get('session')!;
-      const user = await prisma.user.findUnique({
-        where: {
-          username: session.username,
-        },
-      });
-
-      if (!user) {
-        return c.redirect('/auth/login');
-      }
 
       const { title, body } = c.req.valid('form');
 
@@ -94,7 +75,7 @@ memoApp
         data: {
           title,
           body,
-          userId: user.id,
+          userId: session.userID,
           updatedAt: new Date(),
         },
       });
@@ -104,15 +85,6 @@ memoApp
   )
   .get('edit/:id', async (c) => {
     const session = c.get('session')!;
-    const user = await prisma.user.findUnique({
-      where: {
-        username: session.username,
-      },
-    });
-
-    if (!user) {
-      return c.redirect('/auth/login');
-    }
 
     const memoId = c.req.param('id');
     const memo = await prisma.memo.findUnique({
@@ -121,7 +93,7 @@ memoApp
       },
     });
 
-    const isUserMemo = memo?.userId === user.id;
+    const isUserMemo = memo?.userId === session.userID;
     if (!isUserMemo) {
       // 403 Forbidden
       return c.status(404);
@@ -160,15 +132,6 @@ memoApp
     ),
     async (c) => {
       const session = c.get('session')!;
-      const user = await prisma.user.findUnique({
-        where: {
-          username: session.username,
-        },
-      });
-
-      if (!user) {
-        return c.redirect('/auth/login');
-      }
 
       const memoId = c.req.param('id');
       const memo = await prisma.memo.findUnique({
@@ -177,7 +140,7 @@ memoApp
         },
       });
 
-      const isUserMemo = memo?.userId === user.id;
+      const isUserMemo = memo?.userId === session.userID;
       if (!isUserMemo) {
         // 403 Forbidden
         return c.status(404);

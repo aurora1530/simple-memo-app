@@ -117,8 +117,8 @@ authApp
       }
 
       const session = await getSession(c);
+      session.userID = user.id;
       session.username = user.username;
-      session.isLogin = true;
 
       await session.save();
 
