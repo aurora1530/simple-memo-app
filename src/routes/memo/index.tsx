@@ -1,7 +1,6 @@
 import { type Env, Hono } from 'hono';
 import { ensureLoginedMiddleware } from '../../sessionMiddleware.js';
 import prisma from '../../prisma.js';
-import { Layout } from '../../layout.js';
 import MemoList from '../../components/memo/MemoList.js';
 import { zValidator } from '@hono/zod-validator';
 import { z } from 'zod';
@@ -22,8 +21,8 @@ memoApp
       },
     });
 
-    return c.html(
-      <Layout c={c} title="Memo">
+    return c.render(
+      <>
         <h1>Memo</h1>
         <div>
           <a href="/memo/create">Create Memo</a>
@@ -31,12 +30,15 @@ memoApp
         <div>
           <MemoList memos={memos} />
         </div>
-      </Layout>
+      </>,
+      {
+        title: 'Memo',
+      }
     );
   })
   .get('/create', (c) => {
-    return c.html(
-      <Layout c={c} title="Create Memo">
+    return c.render(
+      <>
         <form method="post">
           <div>
             <label>
@@ -54,7 +56,10 @@ memoApp
             <button type="submit">Create</button>
           </div>
         </form>
-      </Layout>
+      </>,
+      {
+        title: 'Create Memo',
+      }
     );
   })
   .post(
@@ -99,8 +104,8 @@ memoApp
       return c.status(404);
     }
 
-    return c.html(
-      <Layout c={c} title="Edit Memo">
+    return c.render(
+      <>
         <form method="post">
           <div>
             <label>
@@ -118,7 +123,10 @@ memoApp
             <button type="submit">Update</button>
           </div>
         </form>
-      </Layout>
+      </>,
+      {
+        title: 'Edit Memo',
+      }
     );
   })
   .post(

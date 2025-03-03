@@ -1,5 +1,4 @@
 import { type Env, Hono } from 'hono';
-import { Layout } from '../../layout.js';
 import { zValidator } from '@hono/zod-validator';
 import { z } from 'zod';
 import prisma from '../../prisma.js';
@@ -11,10 +10,13 @@ const authApp = new Hono<Env>();
 
 authApp
   .get('/register', (c) => {
-    return c.html(
-      <Layout c={c} title="Register">
+    return c.render(
+      <>
         <Form isRegister={true} />
-      </Layout>
+      </>,
+      {
+        title: 'Register',
+      }
     );
   })
   .post(
@@ -42,10 +44,13 @@ authApp
       });
 
       if (userExists) {
-        return c.html(
-          <Layout c={c} title="Register">
+        return c.render(
+          <>
             <Form isRegister={true} errorMessage="Username already exists" />
-          </Layout>
+          </>,
+          {
+            title: 'Register',
+          }
         );
       }
 
@@ -64,10 +69,13 @@ authApp
     }
   )
   .get('/login', (c) => {
-    return c.html(
-      <Layout c={c} title="Login">
+    return c.render(
+      <>
         <Form isRegister={false} />
-      </Layout>
+      </>,
+      {
+        title: 'Login',
+      }
     );
   })
   .post(
@@ -81,10 +89,13 @@ authApp
       (result, c) => {
         if (!result.success) {
           const errorMessage = result.error.message;
-          return c.html(
-            <Layout c={c} title="Login">
+          return c.render(
+            <>
               <Form isRegister={false} errorMessage={errorMessage} />
-            </Layout>
+            </>,
+            {
+              title: 'Login',
+            }
           );
         }
       }
@@ -99,20 +110,26 @@ authApp
       });
 
       if (!user) {
-        return c.html(
-          <Layout c={c} title="Login">
+        return c.render(
+          <>
             <Form isRegister={false} errorMessage="Invalid username or password" />
-          </Layout>
+          </>,
+          {
+            title: 'Login',
+          }
         );
       }
 
       const valid = await verify(user.passwordHash, password);
 
       if (!valid) {
-        return c.html(
-          <Layout c={c} title="Login">
+        return c.render(
+          <>
             <Form isRegister={false} errorMessage="Invalid username or password" />
-          </Layout>
+          </>,
+          {
+            title: 'Login',
+          }
         );
       }
 
@@ -124,11 +141,12 @@ authApp
 
       return c.redirect('/memo');
     }
-  ).get('/logout', async (c) => {
+  )
+  .get('/logout', async (c) => {
     const session = await getSession(c);
     session.destroy();
 
     return c.redirect('/');
-  })
+  });
 
 export default authApp;

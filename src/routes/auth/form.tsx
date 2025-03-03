@@ -1,5 +1,3 @@
-import { Layout } from '../../layout.js';
-
 interface FormProps {
   isRegister: boolean;
   errorMessage?: string;
