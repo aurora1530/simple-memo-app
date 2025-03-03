@@ -64,8 +64,8 @@ const Header: FC = async () => {
             </>
           ) : (
             <>
-              <a href="/auth/register">Register</a>
-              <a href="/auth/login">Login</a>
+              <a href="/auth/register">新規登録</a>
+              <a href="/auth/login">ログイン</a>
             </>
           )}
         </div>

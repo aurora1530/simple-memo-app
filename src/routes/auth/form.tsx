@@ -76,7 +76,7 @@ const Form = ({ isRegister, errorMessages }: FormProps) => {
             placeholder="password"
           />
           <button class={buttonClass} type="submit">
-            {isRegister ? '登録' : 'ログイン'}
+            {isRegister ? '新規登録' : 'ログイン'}
           </button>
           {errorMessages && (
             <div class={errorClass}>
@@ -93,14 +93,14 @@ const Form = ({ isRegister, errorMessages }: FormProps) => {
 
 export const createRegisterForm = (c: Context, errorMessages?: string[]) => {
   return c.render(<Form isRegister={true} errorMessages={errorMessages} />, {
-    title: 'Register',
+    title: '新規登録',
   });
 };
 
 export const createLoginForm = (c: Context, errorMessages?: string[]) => {
   {
     return c.render(<Form isRegister={false} errorMessages={errorMessages} />, {
-      title: 'Login',
+      title: 'ログイン',
     });
   }
 };
