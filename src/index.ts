@@ -6,6 +6,7 @@ import { csrf } from 'hono/csrf'
 import { logger } from 'hono/logger'
 import { serveStatic } from '@hono/node-server/serve-static'
 import { secureHeaders } from 'hono/secure-headers'
+import rootRenderer from './renderer.js'
 
 const app = new Hono()
 
@@ -13,6 +14,7 @@ app.use(logger());
 app.use(serveStatic({ root: 'public' }));
 app.use(secureHeaders());
 app.use(sessionMiddleware);
+app.use(rootRenderer);
 app.route('/', indexApp);
 
 serve({
