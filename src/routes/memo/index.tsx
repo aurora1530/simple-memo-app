@@ -3,44 +3,11 @@ import { ensureLoginedMiddleware } from '../../sessionMiddleware.js';
 import prisma from '../../prisma.js';
 import MemoList from '../../components/memo/MemoList.js';
 import MemoForm from '../../components/memo/MemoForm.js';
-import { jsxRenderer } from 'hono/jsx-renderer';
-import { css, Style } from 'hono/css';
 import { memoValidation } from './validation.js';
+import { css } from 'hono/css';
 
 const memoApp = new Hono<Env>();
 memoApp.use(ensureLoginedMiddleware);
-
-memoApp.use(
-  jsxRenderer(({ children, Layout }) => {
-    return (
-      <Layout>
-        <Style>
-          {css`
-            .memo {
-              border: 1px solid #ccc;
-              padding: 10px;
-              margin: 10px 0;
-              border-radius: 5px;
-              background-color: #f9f9f9;
-            }
-            .memo-title {
-              font-size: 1.2em;
-              font-weight: bold;
-            }
-            .memo-body {
-              margin: 10px 0;
-            }
-            .memo-dates {
-              font-size: 0.8em;
-              color: #666;
-            }
-          `}
-        </Style>
-        {children}
-      </Layout>
-    );
-  })
-);
 
 // メモ一覧
 memoApp.get('/', async (c) => {
@@ -55,15 +22,35 @@ memoApp.get('/', async (c) => {
     },
   });
 
+  const headingClass = css`
+    text-align: center;
+    font-size: 2em;
+    margin: 20px 0;
+    color: #333;
+  `;
+
+  const createMemoButtonClass = css`
+    display: inline-block;
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background 0.3s ease;
+    &:hover {
+      background-color: #0056b3;
+    }
+  `;
+
   return c.render(
     <>
-      <h1>Memo</h1>
-      <div>
-        <a href="/memo/create">Create Memo</a>
+      <h1 className={headingClass}>Memo</h1>
+      <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+        <a href="/memo/create" className={createMemoButtonClass}>
+          Create Memo
+        </a>
       </div>
-      <div>
-        <MemoList memos={memos} />
-      </div>
+      <MemoList memos={memos} />
     </>,
     {
       title: 'Memo',
@@ -109,11 +96,7 @@ memoApp
     }
 
     return c.render(
-      <MemoForm
-        submitLabel="更新"
-        defaultTitle={memo.title}
-        defaultBody={memo.body}
-      />,
+      <MemoForm submitLabel="更新" defaultTitle={memo.title} defaultBody={memo.body} />,
       {
         title: 'Edit Memo',
       }
