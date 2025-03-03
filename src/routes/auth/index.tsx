@@ -122,7 +122,7 @@ authApp
 
       await session.save();
 
-      return c.redirect('/');
+      return c.redirect('/memo');
     }
   ).get('/logout', async (c) => {
     const session = await getSession(c);
