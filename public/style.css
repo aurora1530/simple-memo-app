@@ -16,3 +16,11 @@
   font-size: 0.8em;
   color: #666;
 }
+
+body {
+  margin: 0;
+}
+
+main {
+  padding: 10px;
+}
