@@ -2,10 +2,10 @@ import { css } from 'hono/css';
 
 interface FormProps {
   isRegister: boolean;
-  errorMessage?: string;
+  errorMessages?: string[];
 }
 
-const Form = ({ isRegister, errorMessage }: FormProps) => {
+const Form = ({ isRegister, errorMessages }: FormProps) => {
   const formContainerClass = css`
     display: flex;
     justify-content: center;
@@ -28,7 +28,6 @@ const Form = ({ isRegister, errorMessage }: FormProps) => {
   // エラーメッセージ用のスタイル
   const errorClass = css`
     color: #ff0000;
-    margin-bottom: 1rem;
     font-weight: bold;
   `;
 
@@ -78,7 +77,13 @@ const Form = ({ isRegister, errorMessage }: FormProps) => {
           <button class={buttonClass} type="submit">
             {isRegister ? '登録' : 'ログイン'}
           </button>
-          {errorMessage && <p className={errorClass}>{errorMessage}</p>}
+          {errorMessages && (
+            <div class={errorClass}>
+              {errorMessages.map((message) => (
+                <p>{message}</p>
+              ))}
+            </div>
+          )}
         </form>
       </div>
     </>
