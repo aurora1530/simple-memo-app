@@ -42,12 +42,17 @@ memoApp.get('/', async (c) => {
     }
   `;
 
+  const topContainerClass = css`
+    text-align: center;
+    margin-top: 20px;
+  `;
+
   return c.render(
     <>
-      <h1 className={headingClass}>Memo</h1>
-      <div style={{ textAlign: 'center', marginBottom: '20px' }}>
-        <a href="/memo/create" className={createMemoButtonClass}>
-          Create Memo
+      <h1 class={headingClass}>Memo</h1>
+      <div class={topContainerClass}>
+        <a href="/memo/create" class={createMemoButtonClass}>
+          メモを作成
         </a>
       </div>
       <MemoList memos={memos} />
