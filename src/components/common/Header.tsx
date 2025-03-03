@@ -58,9 +58,9 @@ const Header: FC = async () => {
           {session?.username ? (
             <>
               <span>
-                user: <strong>{session.username}</strong>
+                ログイン中: <strong>{session.username}</strong>
               </span>
-              <a href="/auth/logout">Logout</a>
+              <a href="/auth/logout">ログアウト</a>
             </>
           ) : (
             <>
