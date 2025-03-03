@@ -68,4 +68,15 @@ indexApp.get('/', (c) => {
   );
 });
 
+indexApp.get('/forbidden', (c) => {
+  return c.render(
+    <>
+      <h1>アクセスが許可されていません</h1>
+    </>,
+    {
+      title: 'Forbidden',
+    }
+  );
+});
+
 export default indexApp;

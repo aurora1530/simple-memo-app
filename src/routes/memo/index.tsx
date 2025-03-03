@@ -91,8 +91,7 @@ memoApp
 
     const isUserMemo = memo?.userId === session.userID;
     if (!isUserMemo) {
-      // 403 Forbidden
-      return c.status(404);
+      return c.redirect('/forbidden')
     }
 
     return c.render(
@@ -106,16 +105,22 @@ memoApp
     const session = c.get('session')!;
 
     const memoId = c.req.param('id');
-    const memo = await prisma.memo.findUnique({
-      where: {
-        id: memoId,
-      },
-    });
+
+    let memo;
+    try {
+      memo = await prisma.memo.findUnique({
+        where: {
+          id: memoId,
+        },
+      });
+    }catch(e){
+      console.error(e);
+      return c.redirect('/forbidden')
+    }
 
     const isUserMemo = memo?.userId === session.userID;
     if (!isUserMemo) {
-      // 403 Forbidden
-      return c.status(404);
+      return c.redirect('/forbidden')
     }
 
     const { title, body } = c.req.valid('form');
