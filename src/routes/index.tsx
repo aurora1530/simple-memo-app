@@ -1,14 +1,14 @@
-import { Hono } from 'hono';
+import { type Env, Hono } from 'hono';
 import { Layout } from '../layout.js';
 import authApp from './auth/index.js';
 
-const indexApp = new Hono();
+const indexApp = new Hono<Env>();
 
 indexApp.route('/auth', authApp);
 
 indexApp.get('/', (c) => {
   return c.html(
-    <Layout title="Home">
+    <Layout c={c} title="Home">
       <h1>Hello World!</h1>
       <div>
         <div>
