@@ -10,6 +10,7 @@ const MemoList = async ({ memos }: MemoListProps) => {
   const memoContainerClass = css`
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-auto-rows: 1fr;
     gap: 20px;
     margin-top: 20px;
   `;
@@ -21,6 +22,9 @@ const MemoList = async ({ memos }: MemoListProps) => {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     padding: 16px;
     transition: transform 0.2s ease;
+
+    display: flex; /* 縦方向に並べる */
+    flex-direction: column; /* 下部にアクションを配置するため */
     &:hover {
       transform: translateY(-2px);
     }
@@ -49,7 +53,7 @@ const MemoList = async ({ memos }: MemoListProps) => {
   const memoActionsClass = css`
     display: flex;
     justify-content: space-between;
-    margin-top: 12px;
+    margin-top: auto;
   `;
 
   // 編集ボタンは強調するため、背景色・文字色・パディングを設定
