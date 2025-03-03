@@ -7,20 +7,18 @@ interface FormProps {
 
 const Form = ({ isRegister, errorMessage }: FormProps) => {
   return (
-    <Layout title={isRegister ? 'Register' : 'Login'}>
-      <div>
-        <form method="post">
-          <input type="text" name="username" id="username" placeholder="username" />
-          <input type="password" name="password" id="password" placeholder="password" />
-          <button type="submit">{isRegister ? '登録' : 'ログイン'}</button>
-        </form>
-        {errorMessage && (
-          <p className="error" style="color:red;">
-            {errorMessage}
-          </p>
-        )}
-      </div>
-    </Layout>
+    <div>
+      <form method="post">
+        <input type="text" name="username" id="username" placeholder="username" />
+        <input type="password" name="password" id="password" placeholder="password" />
+        <button type="submit">{isRegister ? '登録' : 'ログイン'}</button>
+      </form>
+      {errorMessage && (
+        <p className="error" style="color:red;">
+          {errorMessage}
+        </p>
+      )}
+    </div>
   );
 };
 
