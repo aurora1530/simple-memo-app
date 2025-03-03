@@ -1,3 +1,4 @@
+import type { Context } from 'hono';
 import { css } from 'hono/css';
 
 interface FormProps {
@@ -90,4 +91,16 @@ const Form = ({ isRegister, errorMessages }: FormProps) => {
   );
 };
 
-export default Form;
+export const createRegisterForm = (c: Context, errorMessages?: string[]) => {
+  return c.render(<Form isRegister={true} errorMessages={errorMessages} />, {
+    title: 'Register',
+  });
+};
+
+export const createLoginForm = (c: Context, errorMessages?: string[]) => {
+  {
+    return c.render(<Form isRegister={false} errorMessages={errorMessages} />, {
+      title: 'Login',
+    });
+  }
+};
