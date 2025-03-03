@@ -11,6 +11,11 @@ const authApp = new Hono<Env>();
 
 authApp
   .get('/register', (c) => {
+    const session = c.get('session');
+    if (session?.userID) {
+      return c.redirect('/memo');
+    }
+
     return createRegisterForm(c);
   })
   .post('/register', registerValidator, async (c) => {
@@ -40,6 +45,11 @@ authApp
     return c.redirect('/auth/login');
   })
   .get('/login', (c) => {
+    const session = c.get('session');
+    if (session?.userID) {
+      return c.redirect('/memo');
+    }
+
     return createLoginForm(c);
   })
   .post('/login', loginValidator, async (c) => {
