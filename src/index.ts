@@ -11,7 +11,7 @@ import rootRenderer from './renderer.js'
 const app = new Hono()
 
 app.use(logger());
-app.use(serveStatic({ root: 'public' }));
+app.use('/public/*', serveStatic({ root: './' }));
 app.use(secureHeaders());
 app.use(sessionMiddleware);
 app.use(rootRenderer);

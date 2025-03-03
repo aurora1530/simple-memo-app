@@ -91,7 +91,7 @@ const MemoForm = ({
           <textarea
             className={textareaClass}
             name="body"
-            id="body"
+            id="memo-body"
             placeholder="メモ内容を入力"
           >
             {defaultBody}
@@ -110,6 +110,7 @@ const MemoForm = ({
           </div>
         )}
       </form>
+      <script src="/public/memoForm.js"></script>
     </div>
   );
 };

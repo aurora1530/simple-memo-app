@@ -94,7 +94,7 @@ const MemoList = async ({ memos }: MemoListProps) => {
 
   return (
     <div class={memoContainerClass}>
-      <script src="memoDelete.js"></script>
+      <script src="/public/memoDelete.js"></script>
       {memos.map((memo) => (
         <div key={memo.id} class={memoCardClass}>
           <div class={memoTitleClass}>{memo.title}</div>
