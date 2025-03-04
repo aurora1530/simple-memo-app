@@ -1,10 +1,11 @@
 import { zValidator } from '@hono/zod-validator';
 import { z } from 'zod';
 import { createLoginForm, createRegisterForm } from '../../components/auth/AuthForm.js';
+import { passwordMinLength } from './constant.js';
 
 const passwordSchema = z
   .string()
-  .min(8, 'パスワードは8文字以上で入力してください')
+  .min(passwordMinLength, 'パスワードは8文字以上で入力してください')
   .regex(
     /^(?=.*?[a-z])(?=.*?\d)[a-z\d]+$/i,
     'パスワードは英字と数字をそれぞれ1文字以上含む必要があります'

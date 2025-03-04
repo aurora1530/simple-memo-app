@@ -1,5 +1,6 @@
 import type { Context } from 'hono';
 import { css } from 'hono/css';
+import { passwordMinLength } from '../../routes/auth/constant.js';
 
 interface FormProps {
   isRegister: boolean;
@@ -74,6 +75,7 @@ const AuthForm = ({ isRegister, errorMessages }: FormProps) => {
             name="password"
             id="password"
             placeholder="password"
+            minlength={passwordMinLength}
           />
           <button class={buttonClass} type="submit">
             {isRegister ? '新規登録' : 'ログイン'}
