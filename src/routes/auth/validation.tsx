@@ -22,7 +22,10 @@ export const registerValidator = zValidator(
   (result, c) => {
     if (!result.success) {
       const errorMessages = result.error.errors.map((e) => e.message);
-      return createRegisterForm(c, errorMessages);
+      return createRegisterForm(c, {
+        errorMessages,
+        defaultUsername: result.data.username,
+      });
     }
   }
 );
@@ -36,7 +39,10 @@ export const loginValidator = zValidator(
   (result, c) => {
     if (!result.success) {
       const errorMessages = result.error.errors.map((e) => e.message);
-      return createLoginForm(c, errorMessages);
+      return createLoginForm(c, {
+        errorMessages,
+        defaultUsername: result.data.username,
+      });
     }
   }
 );

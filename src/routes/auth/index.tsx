@@ -25,7 +25,9 @@ authApp
     });
 
     if (userExists) {
-      return createRegisterForm(c, [`${username}は既に登録されています`]);
+      return createRegisterForm(c, {
+        errorMessages: [`${username}は既に登録されています`],
+      });
     }
 
     const hashedPassword = await hash(password, {
@@ -62,21 +64,25 @@ authApp
     });
 
     if (!user) {
-      return createLoginForm(c, ['ユーザー名またはパスワードが違います']);
+      return createLoginForm(c, {
+        errorMessages: ['ユーザー名またはパスワードが違います'],
+      });
     }
 
     const valid = await verify(user.passwordHash, password);
 
     if (!valid) {
-      return createLoginForm(c, ['ユーザー名またはパスワードが違います']);
+      return createLoginForm(c, {
+        errorMessages: ['ユーザー名またはパスワードが違います'],
+      });
     }
 
     const session = c.get('session');
     session.isLogin = true;
     session.user = {
       id: user.id,
-      name: user.username
-    }
+      name: user.username,
+    };
     session.serverMessage = 'ログインしました';
 
     await session.save();

@@ -4,10 +4,11 @@ import { passwordMinLength } from '../../routes/auth/constant.js';
 
 interface FormProps {
   isRegister: boolean;
+  defaultUsername?: string;
   errorMessages?: string[];
 }
 
-const AuthForm = ({ isRegister, errorMessages }: FormProps) => {
+const AuthForm = ({ isRegister, defaultUsername, errorMessages }: FormProps) => {
   const formContainerClass = css`
     display: flex;
     justify-content: center;
@@ -86,6 +87,7 @@ const AuthForm = ({ isRegister, errorMessages }: FormProps) => {
             name="username"
             id="username"
             placeholder="username"
+            value={defaultUsername}
             required
           />
           <input
@@ -124,16 +126,32 @@ const AuthForm = ({ isRegister, errorMessages }: FormProps) => {
   );
 };
 
-export const createRegisterForm = (c: Context, errorMessages?: string[]) => {
-  return c.render(<AuthForm isRegister={true} errorMessages={errorMessages} />, {
-    title: '新規登録',
-  });
+type createOptions = Omit<FormProps, 'isRegister'>;
+
+export const createRegisterForm = (c: Context, options?: createOptions) => {
+  return c.render(
+    <AuthForm
+      {...{
+        isRegister: true,
+        ...options,
+      }}
+    />,
+    {
+      title: '新規登録',
+    }
+  );
 };
 
-export const createLoginForm = (c: Context, errorMessages?: string[]) => {
-  {
-    return c.render(<AuthForm isRegister={false} errorMessages={errorMessages} />, {
+export const createLoginForm = (c: Context, options?: createOptions) => {
+  return c.render(
+    <AuthForm
+      {...{
+        isRegister: false,
+        ...options,
+      }}
+    />,
+    {
       title: 'ログイン',
-    });
-  }
+    }
+  );
 };
