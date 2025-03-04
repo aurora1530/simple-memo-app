@@ -7,8 +7,8 @@ const passwordSchema = z
   .string()
   .min(passwordMinLength, 'パスワードは8文字以上で入力してください')
   .regex(
-    /^(?=.*?[a-z])(?=.*?\d)[a-z\d]+$/i,
-    'パスワードは英字と数字をそれぞれ1文字以上含む必要があります'
+    /^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?\d)[a-zA-Z\d]+$/,
+    'パスワードは英字の大文字・小文字、そして数字をそれぞれ1文字以上含む必要があります'
   );
 
 const usernameSchema = z.string().min(1, 'ユーザー名を入力してください');
