@@ -100,6 +100,21 @@ const MemoList = async ({ memos, mode }: MemoListProps) => {
     }
   `;
 
+  const noMemoMessageClass = css`
+    text-align: center;
+    color: #666;
+    font-size: 1.2em;
+    margin-top: 2rem;
+  `;
+
+  if (memos.length === 0) {
+    return (
+      <div class={noMemoMessageClass}>
+        <p>メモがありません。</p>
+      </div>
+    );
+  }
+
   const cutDownedBody = (body: string) => {
     if (body.length > 100) {
       return body.slice(0, 100) + '...';
