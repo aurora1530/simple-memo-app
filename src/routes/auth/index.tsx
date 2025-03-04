@@ -1,11 +1,8 @@
 import { type Env, Hono } from 'hono';
-import { zValidator } from '@hono/zod-validator';
-import { z } from 'zod';
 import prisma from '../../prisma.js';
 import { argon2id, hash, verify } from 'argon2';
 import { createLoginForm, createRegisterForm } from './form.js';
 import { loginValidator, registerValidator } from './validation.js';
-import type { Session } from '../../sessionMiddleware.js';
 
 const authApp = new Hono<Env>();
 

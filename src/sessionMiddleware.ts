@@ -1,4 +1,4 @@
-import type { Context, Env } from 'hono';
+import type { Env } from 'hono';
 import { env } from 'hono/adapter';
 import { createMiddleware } from 'hono/factory';
 import { getIronSession, type IronSession } from 'iron-session';
