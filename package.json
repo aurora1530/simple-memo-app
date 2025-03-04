@@ -2,7 +2,9 @@
   "name": "simple-memo-app",
   "type": "module",
   "scripts": {
-    "dev": "tsx watch src/index.ts"
+    "dev": "tsx watch src/index.ts",
+    "db:sample": "tsx sample/main.ts",
+    "db:dev-init": "prisma migrate reset && run-p dev db:sample"
   },
   "dependencies": {
     "@hono/node-server": "^1.13.8",
