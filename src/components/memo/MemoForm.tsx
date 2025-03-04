@@ -74,7 +74,7 @@ const MemoForm = ({
 
   return (
     <div className={formContainerClass}>
-      <form method="post" className={formClass}>
+      <form method="post" className={formClass} id="memo-form">
         <div>
           <label htmlFor="title">Title</label>
           <input
