@@ -4,9 +4,10 @@ import { css } from 'hono/css';
 
 interface MemoListProps {
   memos: Memo[];
+  mode: 'trash' | 'list';
 }
 
-const MemoList = async ({ memos }: MemoListProps) => {
+const MemoList = async ({ memos, mode }: MemoListProps) => {
   const memoContainerClass = css`
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -85,6 +86,20 @@ const MemoList = async ({ memos }: MemoListProps) => {
     }
   `;
 
+  const restoreButtonClass = css`
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+    border-radius: 4px;
+    padding: 6px 12px;
+    font-size: 0.9em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    &:hover {
+      background-color: #c1e2b3;
+    }
+  `;
+
   const cutDownedBody = (body: string) => {
     if (body.length > 100) {
       return body.slice(0, 100) + '...';
@@ -94,7 +109,6 @@ const MemoList = async ({ memos }: MemoListProps) => {
 
   return (
     <div class={memoContainerClass}>
-      <script src="/public/memoDelete.js"></script>
       {memos.map((memo) => (
         <div key={memo.id} class={memoCardClass}>
           <div class={memoTitleClass}>{memo.title}</div>
@@ -105,12 +119,25 @@ const MemoList = async ({ memos }: MemoListProps) => {
             <a class={editButtonClass} href={`/memo/edit/${memo.id}`}>
               Edit
             </a>
-            <button class={deleteButtonClass} onclick={`deleteMemo("${memo.id}")`}>
-              Delete
-            </button>
+            {mode === 'list' ? (
+              <>
+                <button class={deleteButtonClass} onclick={`deleteMemo("${memo.id}")`}>
+                  Delete
+                </button>
+              </>
+            ) : (
+              <>
+                <button class={restoreButtonClass} onclick={`restoreMemo("${memo.id}")`}>
+                  Restore
+                </button>
+              </>
+            )}
           </div>
         </div>
       ))}
+      <script
+        src={mode === 'list' ? '/public/memoDelete.js' : '/public/memoRestore.js'}
+      ></script>
     </div>
   );
 };

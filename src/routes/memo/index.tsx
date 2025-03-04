@@ -9,6 +9,31 @@ import { css } from 'hono/css';
 const memoApp = new Hono<LoginedEnv>();
 memoApp.use(ensureLoginedMiddleware);
 
+const headingClass = css`
+  text-align: center;
+  font-size: 2em;
+  margin: 20px 0;
+  color: #333;
+`;
+
+const createMemoButtonClass = css`
+  display: inline-block;
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: background 0.3s ease;
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
+
+const topContainerClass = css`
+  text-align: center;
+  margin-top: 20px;
+`;
+
 // メモ一覧
 memoApp.get('/', async (c) => {
   const session = c.get('session');
@@ -23,31 +48,6 @@ memoApp.get('/', async (c) => {
     },
   });
 
-  const headingClass = css`
-    text-align: center;
-    font-size: 2em;
-    margin: 20px 0;
-    color: #333;
-  `;
-
-  const createMemoButtonClass = css`
-    display: inline-block;
-    background-color: #007bff;
-    color: #fff;
-    padding: 10px 20px;
-    border-radius: 4px;
-    text-decoration: none;
-    transition: background 0.3s ease;
-    &:hover {
-      background-color: #0056b3;
-    }
-  `;
-
-  const topContainerClass = css`
-    text-align: center;
-    margin-top: 20px;
-  `;
-
   return c.render(
     <>
       <h1 class={headingClass}>Memo</h1>
@@ -56,7 +56,7 @@ memoApp.get('/', async (c) => {
           メモを作成
         </a>
       </div>
-      <MemoList memos={memos} />
+      <MemoList memos={memos} mode="list" />
     </>,
     {
       title: 'Memo',
@@ -184,7 +184,54 @@ memoApp
     session.serverMessage = 'メモを削除しました';
     await session.save();
 
-    return c.json({ memo });
+    return c.json({});
+  })
+  .get('trash', async (c) => {
+    const session = c.get('session');
+
+    const memos = await prisma.memo.findMany({
+      where: {
+        userId: session.user.id,
+        deleted: true,
+      },
+      orderBy: {
+        updatedAt: 'desc',
+      },
+    });
+
+    return c.render(
+      <>
+        <h1 class={headingClass}>ゴミ箱</h1>
+        <div class={topContainerClass}>
+          <a href="/memo/create" class={createMemoButtonClass}>
+            メモを作成
+          </a>
+        </div>
+        <MemoList memos={memos} mode="trash" />
+      </>,
+      {
+        title: 'Memo Trash',
+      }
+    );
+  })
+  .put('restore/:id', async (c) => {
+    const session = c.get('session');
+
+    const memoId = c.req.param('id');
+    const memo = await prisma.memo.update({
+      where: {
+        id: memoId,
+        userId: session.user.id,
+      },
+      data: {
+        deleted: false,
+      },
+    });
+
+    session.serverMessage = 'メモを復元しました';
+    await session.save();
+
+    return c.json({});
   });
 
 export default memoApp;
