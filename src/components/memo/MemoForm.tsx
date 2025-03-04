@@ -52,6 +52,7 @@ const MemoForm = ({
   const textareaClass = css`
     box-sizing: border-box;
     width: 100%;
+    height: 40vh;
     padding: 0.75rem;
     margin: 0.5rem 0;
     border: 1px solid #ccc;

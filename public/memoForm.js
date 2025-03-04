@@ -54,7 +54,3 @@ memoBody.addEventListener('input', handleBodyInput);
 
 memoTitle.dispatchEvent(new Event('input'));
 memoBody.dispatchEvent(new Event('input'));
-
-// メモ本文の高さをデバイスの高さの40%に設定
-const deviceHeight = window.innerHeight;
-memoBody.style.height = `${deviceHeight * 0.4}px`;
