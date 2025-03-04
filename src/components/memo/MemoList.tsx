@@ -129,17 +129,22 @@ const MemoList = async ({ memos, mode }: MemoListProps) => {
           <div class={memoDatesClass}>Updated: {formatDate(memo.updatedAt)}</div>
           <div class={memoDatesClass}>Created: {formatDate(memo.createdAt)}</div>
           <div class={memoActionsClass}>
-            <a class={editButtonClass} href={`/memo/edit/${memo.id}`}>
-              Edit
-            </a>
             {mode === 'list' ? (
-              <button class={deleteButtonClass} onclick={`deleteMemo("${memo.id}")`}>
-                Delete
-              </button>
+              <>
+                <a class={editButtonClass} href={`/memo/edit/${memo.id}`}>
+                  Edit
+                </a>
+                <button class={deleteButtonClass} onclick={`deleteMemo("${memo.id}")`}>
+                  Delete
+                </button>
+              </>
             ) : (
-              <button class={restoreButtonClass} onclick={`restoreMemo("${memo.id}")`}>
-                Restore
-              </button>
+              <>
+                <div>{/* empty for design*/}</div>
+                <button class={restoreButtonClass} onclick={`restoreMemo("${memo.id}")`}>
+                  Restore
+                </button>
+              </>
             )}
           </div>
         </div>
