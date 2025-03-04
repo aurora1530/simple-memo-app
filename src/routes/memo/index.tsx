@@ -21,6 +21,7 @@ const createMemoButtonClass = css`
   background-color: #007bff;
   color: #fff;
   padding: 10px 20px;
+  margin: 0 10px;
   border-radius: 4px;
   text-decoration: none;
   transition: background 0.3s ease;
@@ -54,6 +55,9 @@ memoApp.get('/', async (c) => {
       <div class={topContainerClass}>
         <a href="/memo/create" class={createMemoButtonClass}>
           メモを作成
+        </a>
+        <a href="/memo/trash" class={createMemoButtonClass}>
+          ゴミ箱
         </a>
       </div>
       <MemoList memos={memos} mode="list" />
@@ -205,6 +209,9 @@ memoApp
         <div class={topContainerClass}>
           <a href="/memo/create" class={createMemoButtonClass}>
             メモを作成
+          </a>
+          <a href="/memo" class={createMemoButtonClass}>
+            メモ一覧
           </a>
         </div>
         <MemoList memos={memos} mode="trash" />
