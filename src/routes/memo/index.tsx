@@ -6,6 +6,7 @@ import MemoForm from '../../components/memo/MemoForm.js';
 import { memoValidation } from './validation.js';
 import { css } from 'hono/css';
 import { sealMemoTitleAndBody, unsealMemoTitleAndBody, unsealMemoList } from './seal.js';
+import { MAX_MEMO_COUNT } from './constant.js';
 
 const memoApp = new Hono<LoginedEnv>();
 memoApp.use(ensureLoginedMiddleware);
@@ -78,6 +79,25 @@ memoApp
   .post('/create', memoValidation('create'), async (c) => {
     const session = c.get('session');
     const { title, body } = c.req.valid('form');
+
+    const currentMemoCount = await prisma.memo.count({
+      where: {
+        userId: session.user.id,
+      },
+    });
+    if (currentMemoCount >= MAX_MEMO_COUNT) {
+      return c.render(
+        <MemoForm
+          submitLabel="新規作成"
+          defaultTitle={title}
+          defaultBody={body}
+          errorMessages={[`メモは${MAX_MEMO_COUNT}個までしか作成できません`]}
+        />,
+        {
+          title: 'Create Memo',
+        }
+      );
+    }
 
     const sealedMemo = await sealMemoTitleAndBody(c, { title, body });
 
