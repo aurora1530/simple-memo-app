@@ -18,18 +18,20 @@ type SessionData = {
 
 export type Session = IronSession<SessionData>;
 
-const getSession = async (c: Context) => {
-  return await getIronSession<SessionData>(c.req.raw, c.res, {
+export const sessionMiddleware = createMiddleware<Env>(async (c, next) => {
+  const session = await getIronSession<SessionData>(c.req.raw, c.res, {
     cookieName: 'session',
     password: env<{ SESSION_PASSWORD: string }>(c).SESSION_PASSWORD,
   });
-};
 
-export const sessionMiddleware = createMiddleware<Env>(async (c, next) => {
-  const session = await getSession(c);
+  // 初期化。isLoginがUndefinedの場合が最初はあるので、falseにする
+  if (!session.isLogin) {
+    session.isLogin = false;
+  }
 
   c.set('session', session);
   await next();
+  await session.save();
 });
 
 export type LoginedEnv = Env & {
