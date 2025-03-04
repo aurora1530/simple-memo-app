@@ -7,6 +7,7 @@ import { memoValidation } from './validation.js';
 import { css } from 'hono/css';
 import { sealMemoTitleAndBody, unsealMemoTitleAndBody, unsealMemoList } from './seal.js';
 import { MAX_MEMO_COUNT } from './constant.js';
+import MemoView from '../../components/memo/MemoView.js';
 
 const memoApp = new Hono<LoginedEnv>();
 memoApp.use(ensureLoginedMiddleware);
@@ -272,6 +273,29 @@ memoApp
     await session.save();
 
     return c.json({});
+  })
+  .get('/view/:id', async (c) => {
+    const session = c.get('session');
+
+    const memoId = c.req.param('id');
+
+    const memo = await prisma.memo.findUnique({
+      where: {
+        id: memoId,
+        deleted: false,
+      },
+    });
+
+    const isUserMemo = memo?.userId === session.user.id;
+    if (!isUserMemo) {
+      return c.redirect('/forbidden');
+    }
+
+    const unsealedMemo = await unsealMemoList(c, [memo]);
+
+    return c.render(<MemoView memo={unsealedMemo[0]} />, {
+      title: 'View Memo',
+    });
   });
 
 export default memoApp;

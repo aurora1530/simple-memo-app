@@ -26,6 +26,8 @@ const MemoList = async ({ memos, mode }: MemoListProps) => {
 
     display: flex;
     flex-direction: column;
+
+    cursor: pointer;
     &:hover {
       transform: translateY(-2px);
     }
@@ -68,6 +70,7 @@ const MemoList = async ({ memos, mode }: MemoListProps) => {
   const memoActionsClass = css`
     display: flex;
     justify-content: space-between;
+    pointer-events: auto;
   `;
 
   const editButtonClass = css`
@@ -81,6 +84,7 @@ const MemoList = async ({ memos, mode }: MemoListProps) => {
     &:hover {
       background-color: #0056b3;
     }
+    pointer-events: all;
   `;
 
   const deleteButtonClass = css`
@@ -95,6 +99,7 @@ const MemoList = async ({ memos, mode }: MemoListProps) => {
     &:hover {
       background-color: #f1b0b7;
     }
+    pointer-events: all;
   `;
 
   const restoreButtonClass = css`
@@ -109,6 +114,7 @@ const MemoList = async ({ memos, mode }: MemoListProps) => {
     &:hover {
       background-color: #c1e2b3;
     }
+    pointer-events: all;
   `;
 
   const noMemoMessageClass = css`
@@ -136,7 +142,11 @@ const MemoList = async ({ memos, mode }: MemoListProps) => {
   return (
     <div class={memoContainerClass}>
       {memos.map((memo) => (
-        <div key={memo.id} class={memoCardClass}>
+        <div
+          key={memo.id}
+          class={memoCardClass}
+          onclick={mode === 'list' && `location.href='/memo/view/${memo.id}'`}
+        >
           <div class={memoTitleClass}>{memo.title}</div>
           <div class={memoBodyClass}>{cutDownedBody(memo.body)}</div>
           <div class={dateContainerClass}>
@@ -153,14 +163,20 @@ const MemoList = async ({ memos, mode }: MemoListProps) => {
                 <a class={editButtonClass} href={`/memo/edit/${memo.id}`}>
                   Edit
                 </a>
-                <button class={deleteButtonClass} onclick={`deleteMemo("${memo.id}")`}>
+                <button
+                  class={deleteButtonClass}
+                  onclick={`deleteMemo("${memo.id}");event.stopPropagation();`}
+                >
                   Delete
                 </button>
               </>
             ) : (
               <>
                 <div>{/* empty for design*/}</div>
-                <button class={restoreButtonClass} onclick={`restoreMemo("${memo.id}")`}>
+                <button
+                  class={restoreButtonClass}
+                  onclick={`restoreMemo("${memo.id}");event.stopPropagation();`}
+                >
                   Restore
                 </button>
               </>
