@@ -1,3 +1,4 @@
+import { MAX_MEMO_COUNT } from '../src/routes/memo/constant.js';
 import {
   type User,
   type Memo,
@@ -108,14 +109,13 @@ const createUserAndMemos = async (user: User) => {
   const memos = jaOrEn === 'ja' ? japaneseMemos : englishMemos;
 
   const randomizedMemos = memos.sort(() => Math.random() - 0.5);
-  const randomizedSize = Math.floor(Math.random() * randomizedMemos.length) + 1;
+  const randomizedSize = Math.floor(Math.random() * MAX_MEMO_COUNT) + 1;
   const selectedMemos = randomizedMemos.slice(0, randomizedSize);
 
   for (const memo of selectedMemos) {
     const result = await createMemo(memo, loginCookie);
     if (!result) {
       console.error('Failed to create memo');
-      return;
     }
   }
 
@@ -127,9 +127,7 @@ const createUsersAndMemos = async () => {
   await new Promise((resolve) => setTimeout(resolve, 5000));
 
   console.time('sample data creation');
-  for (const user of users) {
-    await createUserAndMemos(user);
-  }
+  await Promise.all(users.map(createUserAndMemos));
 
   console.timeEnd('sample data creation');
   console.log('All users and memos created');
