@@ -1,15 +1,17 @@
 import type { Context, Env } from 'hono';
 import { env } from 'hono/adapter';
 import { createMiddleware } from 'hono/factory';
-import { getIronSession } from 'iron-session';
+import { getIronSession, type IronSession } from 'iron-session';
 
-export interface Session {
+interface SessionData {
   userID: number;
   username: string;
 }
 
+export type Session = IronSession<SessionData>;
+
 export const getSession = async (c: Context)=>{
-  return await getIronSession<Session>(c.req.raw, c.res, {
+  return await getIronSession<SessionData>(c.req.raw, c.res, {
     cookieName: 'session',
     password: env<{ SESSION_PASSWORD: string }>(c).SESSION_PASSWORD,
   });
