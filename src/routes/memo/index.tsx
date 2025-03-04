@@ -35,40 +35,38 @@ const topContainerClass = css`
   margin-top: 20px;
 `;
 
-// メモ一覧
-memoApp.get('/', async (c) => {
-  const session = c.get('session');
-
-  const memos = await prisma.memo.findMany({
-    where: {
-      userId: session.user.id,
-      deleted: false,
-    },
-    orderBy: {
-      updatedAt: 'desc',
-    },
-  });
-
-  return c.render(
-    <>
-      <h1 class={headingClass}>Memo</h1>
-      <div class={topContainerClass}>
-        <a href="/memo/create" class={createMemoButtonClass}>
-          メモを作成
-        </a>
-        <a href="/memo/trash" class={createMemoButtonClass}>
-          ゴミ箱
-        </a>
-      </div>
-      <MemoList memos={memos} mode="list" />
-    </>,
-    {
-      title: 'Memo',
-    }
-  );
-});
-
 memoApp
+  .get('/', async (c) => {
+    const session = c.get('session');
+
+    const memos = await prisma.memo.findMany({
+      where: {
+        userId: session.user.id,
+        deleted: false,
+      },
+      orderBy: {
+        updatedAt: 'desc',
+      },
+    });
+
+    return c.render(
+      <>
+        <h1 class={headingClass}>Memo</h1>
+        <div class={topContainerClass}>
+          <a href="/memo/create" class={createMemoButtonClass}>
+            メモを作成
+          </a>
+          <a href="/memo/trash" class={createMemoButtonClass}>
+            ゴミ箱
+          </a>
+        </div>
+        <MemoList memos={memos} mode="list" />
+      </>,
+      {
+        title: 'Memo',
+      }
+    );
+  })
   .get('/create', (c) => {
     return c.render(<MemoForm submitLabel="新規作成" />, {
       title: 'Create Memo',
@@ -105,7 +103,7 @@ memoApp
 
     const isUserMemo = memo?.userId === session.user.id;
     if (!isUserMemo) {
-      return c.redirect('/forbidden')
+      return c.redirect('/forbidden');
     }
 
     return c.render(
@@ -128,14 +126,14 @@ memoApp
           deleted: false,
         },
       });
-    }catch(e){
+    } catch (e) {
       console.error(e);
-      return c.redirect('/forbidden')
+      return c.redirect('/forbidden');
     }
 
     const isUserMemo = memo?.userId === session.user.id;
     if (!isUserMemo) {
-      return c.redirect('/forbidden')
+      return c.redirect('/forbidden');
     }
 
     const { title, body } = c.req.valid('form');
