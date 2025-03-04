@@ -1,5 +1,5 @@
 import type { Memo } from '@prisma/client';
-import { formatDate } from '../../utils/date.js';
+import { formatDate, TIMEZONE_OFFSET_JST } from '../../utils/date.js';
 import { css } from 'hono/css';
 
 interface MemoListProps {
@@ -126,8 +126,12 @@ const MemoList = async ({ memos, mode }: MemoListProps) => {
         <div key={memo.id} class={memoCardClass}>
           <div class={memoTitleClass}>{memo.title}</div>
           <div class={memoBodyClass}>{cutDownedBody(memo.body)}</div>
-          <div class={memoDatesClass}>Updated: {formatDate(memo.updatedAt)}</div>
-          <div class={memoDatesClass}>Created: {formatDate(memo.createdAt)}</div>
+          <div class={memoDatesClass}>
+            Updated: {formatDate(memo.updatedAt, TIMEZONE_OFFSET_JST)}
+          </div>
+          <div class={memoDatesClass}>
+            Created: {formatDate(memo.createdAt, TIMEZONE_OFFSET_JST)}
+          </div>
           <div class={memoActionsClass}>
             {mode === 'list' ? (
               <>
