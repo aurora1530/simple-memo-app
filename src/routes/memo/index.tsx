@@ -83,6 +83,9 @@ memoApp
       },
     });
 
+    session.serverMessage = 'メモを作成しました';
+    await session.save();
+
     return c.redirect('/memo');
   })
   .get('edit/:id', async (c) => {
@@ -159,6 +162,9 @@ memoApp
       },
     });
 
+    session.serverMessage = 'メモを更新しました';
+    await session.save();
+
     return c.redirect('/memo');
   })
   .delete('delete/:id', async (c) => {
@@ -174,6 +180,9 @@ memoApp
         deleted: true,
       },
     });
+
+    session.serverMessage = 'メモを削除しました';
+    await session.save();
 
     return c.json({ memo });
   });

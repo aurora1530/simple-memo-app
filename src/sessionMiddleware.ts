@@ -45,6 +45,8 @@ export type LoginedEnv = Env & {
 export const ensureLoginedMiddleware = createMiddleware<Env>(async (c, next) => {
   const session = c.get('session');
   if (!session.isLogin) {
+    session.serverMessage = 'ログインしてください';
+    await session.save();
     return c.redirect('/auth/login');
   }
 
