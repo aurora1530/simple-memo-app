@@ -9,6 +9,8 @@ indexApp.route('/auth', authApp);
 indexApp.route('/memo', memoApp);
 
 indexApp.get('/', (c) => {
+  const session = c.get('session');
+
   const homeContainerClass = css`
     text-align: center;
     margin-top: 50px;
@@ -50,15 +52,20 @@ indexApp.get('/', (c) => {
         <h1 class={homeTitleClass}>Simple Memo App</h1>
         <p class={homeDescriptionClass}>極めてシンプルなメモアプリ。</p>
         <div class={homeLinksClass}>
-          <a class={homeButtonClass} href="/memo">
-            メモ一覧
-          </a>
-          <a class={homeButtonClass} href="/auth/register">
-            新規登録
-          </a>
-          <a class={homeButtonClass} href="/auth/login">
-            ログイン
-          </a>
+          {session.isLogin ? (
+            <a class={homeButtonClass} href="/memo">
+              メモ一覧
+            </a>
+          ) : (
+            <>
+              <a class={homeButtonClass} href="/auth/register">
+                新規登録
+              </a>
+              <a class={homeButtonClass} href="/auth/login">
+                ログイン
+              </a>
+            </>
+          )}
         </div>
       </div>
     </>,
