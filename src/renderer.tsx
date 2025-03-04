@@ -2,6 +2,7 @@ import { jsxRenderer, useRequestContext } from 'hono/jsx-renderer';
 import Header from './components/common/Header.js';
 import { css, Style } from 'hono/css';
 import type { Env } from 'hono';
+import Footer from './components/common/Footer.js';
 
 const rootRenderer = jsxRenderer(async ({ children, title }) => {
   const c = useRequestContext<Env>();
@@ -34,11 +35,20 @@ const rootRenderer = jsxRenderer(async ({ children, title }) => {
         <title>{title}</title>
         <Style>
           {css`
+            html,
             body {
               margin: 0;
+              padding: 0;
+              height: 100%;
+            }
+
+            body {
+              display: flex;
+              flex-direction: column;
             }
 
             main {
+              flex: 1;
               padding: 10px;
             }
           `}
@@ -48,6 +58,7 @@ const rootRenderer = jsxRenderer(async ({ children, title }) => {
         <Header />
         {serverMessage && <div class={messageContainerClass}>{serverMessage}</div>}
         <main>{children}</main>
+        <Footer />
       </body>
     </html>
   );
