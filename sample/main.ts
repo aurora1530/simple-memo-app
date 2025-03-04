@@ -126,10 +126,12 @@ const createUsersAndMemos = async () => {
   // serverの起動を待つ
   await new Promise((resolve) => setTimeout(resolve, 5000));
 
+  console.time('sample data creation');
   for (const user of users) {
     await createUserAndMemos(user);
   }
 
+  console.timeEnd('sample data creation');
   console.log('All users and memos created');
 };
 
