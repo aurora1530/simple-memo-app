@@ -1,4 +1,4 @@
-import { css } from 'hono/css';
+import { css, Style } from 'hono/css';
 import { MAX_BODY_LENGTH, MAX_TITLE_LENGTH } from '../../routes/memo/constant.js';
 
 interface MemoFormProps {
@@ -93,10 +93,22 @@ const MemoForm = ({
 
   return (
     <div className={formContainerClass}>
+      <Style>
+        {css`
+          /* 文字数制限を超えたときに赤文字にするクラス */
+          .char-count--over-limit {
+            color: #ff0000 !important;
+          }
+        `}
+      </Style>
+
       <form method="post" className={formClass} id="memo-form">
+        <input type="hidden" id="max-title-length" value={MAX_TITLE_LENGTH} />
+        <input type="hidden" id="max-body-length" value={MAX_BODY_LENGTH} />
+
         <div>
           <div class={labelContainerClass}>
-            <label htmlFor="title">Title</label>
+            <label htmlFor="memo-title">Title</label>
             <div class={charCountContainerClass}>
               <span id="title-char-count" className={charCountClass}></span>
               <span className={charCountClass}>/{MAX_TITLE_LENGTH}</span>
@@ -113,7 +125,7 @@ const MemoForm = ({
         </div>
         <div>
           <div class={labelContainerClass}>
-            <label htmlFor="body">Body</label>
+            <label htmlFor="memo-body">Body</label>
             <div class={charCountContainerClass}>
               <span id="body-char-count" className={charCountClass}></span>
               <span className={charCountClass}>/{MAX_BODY_LENGTH}</span>
