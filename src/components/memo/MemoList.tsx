@@ -45,6 +45,12 @@ const MemoList = async ({ memos, mode }: MemoListProps) => {
     white-space: pre-wrap;
   `;
 
+  const dateContainerClass = css`
+    display: flex;
+    flex-direction: column;
+    margin-top: auto;
+  `;
+
   const memoDatesClass = css`
     font-size: 0.8em;
     margin-bottom: 8px;
@@ -62,7 +68,6 @@ const MemoList = async ({ memos, mode }: MemoListProps) => {
   const memoActionsClass = css`
     display: flex;
     justify-content: space-between;
-    margin-top: auto;
   `;
 
   const editButtonClass = css`
@@ -134,11 +139,13 @@ const MemoList = async ({ memos, mode }: MemoListProps) => {
         <div key={memo.id} class={memoCardClass}>
           <div class={memoTitleClass}>{memo.title}</div>
           <div class={memoBodyClass}>{cutDownedBody(memo.body)}</div>
-          <div class={cx(memoDatesClass, memoUpdatedAtClass)}>
-            Updated: {formatDate(memo.updatedAt, TIMEZONE_OFFSET_JST)}
-          </div>
-          <div class={cx(memoDatesClass, memoCreatedAtClass)}>
-            Created: {formatDate(memo.createdAt, TIMEZONE_OFFSET_JST)}
+          <div class={dateContainerClass}>
+            <div class={cx(memoDatesClass, memoUpdatedAtClass)}>
+              Updated: {formatDate(memo.updatedAt, TIMEZONE_OFFSET_JST)}
+            </div>
+            <div class={cx(memoDatesClass, memoCreatedAtClass)}>
+              Created: {formatDate(memo.createdAt, TIMEZONE_OFFSET_JST)}
+            </div>
           </div>
           <div class={memoActionsClass}>
             {mode === 'list' ? (
