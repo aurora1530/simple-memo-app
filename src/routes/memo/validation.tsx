@@ -7,8 +7,14 @@ export const memoValidation = (type: 'create'|'edit') =>
   zValidator(
     'form',
     z.object({
-      title: z.string().min(1, 'タイトルを入力してください'),
-      body: z.string().min(1, '本文を入力してください'),
+      title: z
+        .string()
+        .min(1, 'タイトルを入力してください')
+        .max(255, 'タイトルは255文字以内で入力してください'),
+      body: z
+        .string()
+        .min(1, '本文を入力してください')
+        .max(10000, '本文は10000文字以内で入力してください'),
     }),
     (result, c) => {
       if (!result.success) {
