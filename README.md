@@ -2,6 +2,8 @@
 
 Hono+Prisma(SQLite)を使ったシンプルなメモアプリ
 
+[iron-webcrypto](https://github.com/brc-dd/iron-webcrypto)を使ってメモのタイトルと本文を暗号化（+MAC付与）して保存する。
+
 ## Setup
 
 ```
