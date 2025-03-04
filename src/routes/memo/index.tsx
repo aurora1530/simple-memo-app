@@ -5,6 +5,7 @@ import MemoList from '../../components/memo/MemoList.js';
 import MemoForm from '../../components/memo/MemoForm.js';
 import { memoValidation } from './validation.js';
 import { css } from 'hono/css';
+import { sealMemoTitleAndBody, unsealMemoTitleAndBody, unsealMemoList } from './seal.js';
 
 const memoApp = new Hono<LoginedEnv>();
 memoApp.use(ensureLoginedMiddleware);
@@ -49,6 +50,8 @@ memoApp
       },
     });
 
+    const unsealedMemoList = await unsealMemoList(c, memos);
+
     return c.render(
       <>
         <h1 class={headingClass}>Memo</h1>
@@ -60,7 +63,7 @@ memoApp
             ゴミ箱
           </a>
         </div>
-        <MemoList memos={memos} mode="list" />
+        <MemoList memos={unsealedMemoList} mode="list" />
       </>,
       {
         title: 'Memo',
@@ -76,10 +79,12 @@ memoApp
     const session = c.get('session');
     const { title, body } = c.req.valid('form');
 
+    const sealedMemo = await sealMemoTitleAndBody(c, { title, body });
+
     await prisma.memo.create({
       data: {
-        title,
-        body,
+        title: sealedMemo.title,
+        body: sealedMemo.body,
         userId: session.user.id,
         updatedAt: new Date(),
       },
@@ -106,8 +111,14 @@ memoApp
       return c.redirect('/forbidden');
     }
 
+    const unsealedMemo = await unsealMemoTitleAndBody(c, memo);
+
     return c.render(
-      <MemoForm submitLabel="更新" defaultTitle={memo.title} defaultBody={memo.body} />,
+      <MemoForm
+        submitLabel="更新"
+        defaultTitle={unsealedMemo.title}
+        defaultBody={unsealedMemo.body}
+      />,
       {
         title: 'Edit Memo',
       }
@@ -132,19 +143,20 @@ memoApp
     }
 
     const isUserMemo = memo?.userId === session.user.id;
-    if (!isUserMemo) {
+    if (!isUserMemo || !memo) {
       return c.redirect('/forbidden');
     }
 
-    const { title, body } = c.req.valid('form');
+    const unsealedMemo = await unsealMemoTitleAndBody(c, memo);
+    const { title: newTitle, body: newBody } = c.req.valid('form');
 
-    const notChanged = memo?.title === title && memo?.body === body;
+    const notChanged = unsealedMemo?.title === newTitle && unsealedMemo?.body === newBody;
     if (notChanged) {
       return c.render(
         <MemoForm
           submitLabel="更新"
-          defaultTitle={title}
-          defaultBody={body}
+          defaultTitle={newTitle}
+          defaultBody={newBody}
           errorMessages={['変更がありません']}
         />,
         {
@@ -153,13 +165,14 @@ memoApp
       );
     }
 
+    const sealedMemo = await sealMemoTitleAndBody(c, { title: newTitle, body: newBody });
     await prisma.memo.update({
       where: {
         id: memoId,
       },
       data: {
-        title,
-        body,
+        title: sealedMemo.title,
+        body: sealedMemo.body,
         updatedAt: new Date(),
       },
     });
@@ -201,6 +214,8 @@ memoApp
       },
     });
 
+    const unsealedMemoList = await unsealMemoList(c, memos);
+
     return c.render(
       <>
         <h1 class={headingClass}>ゴミ箱</h1>
@@ -212,7 +227,7 @@ memoApp
             メモ一覧
           </a>
         </div>
-        <MemoList memos={memos} mode="trash" />
+        <MemoList memos={unsealedMemoList} mode="trash" />
       </>,
       {
         title: 'Memo Trash',
