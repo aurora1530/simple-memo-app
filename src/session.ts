@@ -35,7 +35,6 @@ export const sessionMiddleware = createMiddleware<Env>(async (c, next) => {
   }
 
   c.set('session', session);
-  await session.save();
   await next();
 });
 
