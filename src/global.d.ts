@@ -1,5 +1,5 @@
 import type {} from 'hono';
-import type { Session } from './sessionMiddleware.ts';
+import type { Session } from './session.ts';
 
 declare module 'hono' {
   interface Env {

@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import { ensureLoginedMiddleware, type LoginedEnv } from '../../sessionMiddleware.js';
+import { ensureLoginedMiddleware, type LoginedEnv } from '../../session.js';
 import prisma from '../../prisma.js';
 import MemoList from '../../components/memo/MemoList.js';
 import MemoForm from '../../components/memo/MemoForm.js';

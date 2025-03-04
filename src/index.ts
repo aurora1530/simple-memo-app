@@ -1,7 +1,7 @@
 import { serve } from '@hono/node-server'
 import { type Env, Hono } from 'hono'
 import indexApp from './routes/index.js'
-import { sessionMiddleware } from './sessionMiddleware.js'
+import { sessionMiddleware } from './session.js'
 import { logger } from 'hono/logger'
 import { serveStatic } from '@hono/node-server/serve-static'
 import { secureHeaders } from 'hono/secure-headers'
