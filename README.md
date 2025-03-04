@@ -21,7 +21,7 @@ Set these environment variables in `.env` file.
 ```
 DATABASE_URL=${file path to SQLite database}
 SESSION_PASSWORD=${session password. it needs at least 32 characters}
-DB_SEAL_PASSWORD=${password for encrypting memo title and body}
+DB_ENCRYPT_PASSWORD=${password for encrypting memo title and body}
 ```
 
 ## License
