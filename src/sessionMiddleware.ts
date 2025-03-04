@@ -30,8 +30,8 @@ export const sessionMiddleware = createMiddleware<Env>(async (c, next) => {
   }
 
   c.set('session', session);
-  await next();
   await session.save();
+  await next();
 });
 
 export type LoginedEnv = Env & {
