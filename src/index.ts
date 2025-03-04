@@ -1,5 +1,5 @@
 import { serve } from '@hono/node-server'
-import { Hono } from 'hono'
+import { type Env, Hono } from 'hono'
 import indexApp from './routes/index.js'
 import { sessionMiddleware } from './sessionMiddleware.js'
 import { csrf } from 'hono/csrf'
@@ -8,7 +8,7 @@ import { serveStatic } from '@hono/node-server/serve-static'
 import { secureHeaders } from 'hono/secure-headers'
 import rootRenderer from './renderer.js'
 
-const app = new Hono()
+const app = new Hono<Env>()
 
 app.use(logger());
 app.use('/public/*', serveStatic({ root: './' }));
