@@ -1,4 +1,5 @@
 import { css } from 'hono/css';
+import { MAX_BODY_LENGTH, MAX_TITLE_LENGTH } from '../../routes/memo/constant.js';
 
 interface MemoFormProps {
   submitLabel: string;
@@ -39,6 +40,7 @@ const MemoForm = ({
   `;
 
   const inputClass = css`
+    box-sizing: border-box;
     width: 100%;
     padding: 0.75rem;
     margin: 0.5rem 0;
@@ -48,6 +50,7 @@ const MemoForm = ({
   `;
 
   const textareaClass = css`
+    box-sizing: border-box;
     width: 100%;
     padding: 0.75rem;
     margin: 0.5rem 0;
@@ -72,22 +75,50 @@ const MemoForm = ({
     }
   `;
 
+  const labelContainerClass = css`
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  `;
+
+  const charCountContainerClass = css`
+    margin-left: 0.5rem;
+    display: inline-block;
+  `;
+
+  const charCountClass = css`
+    font-size: 0.85rem;
+    color: #666;
+  `;
+
   return (
     <div className={formContainerClass}>
       <form method="post" className={formClass} id="memo-form">
         <div>
-          <label htmlFor="title">Title</label>
+          <div class={labelContainerClass}>
+            <label htmlFor="title">Title</label>
+            <div class={charCountContainerClass}>
+              <span id="title-char-count" className={charCountClass}></span>
+              <span className={charCountClass}>/{MAX_TITLE_LENGTH}</span>
+            </div>
+          </div>
           <input
-            className={inputClass}
+            class={inputClass}
             type="text"
             name="title"
-            id="title"
+            id="memo-title"
             value={defaultTitle}
             placeholder="タイトルを入力"
           />
         </div>
         <div>
-          <label htmlFor="body">Body</label>
+          <div class={labelContainerClass}>
+            <label htmlFor="body">Body</label>
+            <div class={charCountContainerClass}>
+              <span id="body-char-count" className={charCountClass}></span>
+              <span className={charCountClass}>/{MAX_BODY_LENGTH}</span>
+            </div>
+          </div>
           <textarea
             className={textareaClass}
             name="body"
