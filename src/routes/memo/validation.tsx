@@ -12,13 +12,13 @@ export const memoValidation = (type: 'create' | 'edit') =>
         .string()
         .min(1, 'タイトルを入力してください')
         .refine((title) => getGraphemeCount(title) <= MAX_TITLE_LENGTH, {
-          message: 'タイトルは255文字以内で入力してください',
+          message: `タイトルは${MAX_TITLE_LENGTH}文字以内で入力してください`,
         }),
       body: z
         .string()
         .min(1, '本文を入力してください')
         .refine((body) => getGraphemeCount(body) <= MAX_BODY_LENGTH, {
-          message: '本文は10000文字以内で入力してください',
+          message: `本文は${MAX_BODY_LENGTH}文字以内で入力してください`,
         }),
     }),
     (result, c) => {
