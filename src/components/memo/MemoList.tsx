@@ -24,8 +24,8 @@ const MemoList = async ({ memos, mode }: MemoListProps) => {
     padding: 16px;
     transition: transform 0.2s ease;
 
-    display: flex; /* 縦方向に並べる */
-    flex-direction: column; /* 下部にアクションを配置するため */
+    display: flex;
+    flex-direction: column;
     &:hover {
       transform: translateY(-2px);
     }
@@ -57,7 +57,6 @@ const MemoList = async ({ memos, mode }: MemoListProps) => {
     margin-top: auto;
   `;
 
-  // 編集ボタンは強調するため、背景色・文字色・パディングを設定
   const editButtonClass = css`
     background-color: #007bff;
     color: #fff;
@@ -71,7 +70,6 @@ const MemoList = async ({ memos, mode }: MemoListProps) => {
     }
   `;
 
-  // 削除ボタンは目立ちすぎないように、控えめな色合いに変更
   const deleteButtonClass = css`
     background-color: #f8d7da;
     color: #721c24;
@@ -135,17 +133,13 @@ const MemoList = async ({ memos, mode }: MemoListProps) => {
               Edit
             </a>
             {mode === 'list' ? (
-              <>
-                <button class={deleteButtonClass} onclick={`deleteMemo("${memo.id}")`}>
-                  Delete
-                </button>
-              </>
+              <button class={deleteButtonClass} onclick={`deleteMemo("${memo.id}")`}>
+                Delete
+              </button>
             ) : (
-              <>
-                <button class={restoreButtonClass} onclick={`restoreMemo("${memo.id}")`}>
-                  Restore
-                </button>
-              </>
+              <button class={restoreButtonClass} onclick={`restoreMemo("${memo.id}")`}>
+                Restore
+              </button>
             )}
           </div>
         </div>
