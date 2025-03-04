@@ -4,15 +4,15 @@ import { z } from 'zod';
 import prisma from '../../prisma.js';
 import { argon2id, hash, verify } from 'argon2';
 import { createLoginForm, createRegisterForm } from './form.js';
-import { getSession } from '../../sessionMiddleware.js';
 import { loginValidator, registerValidator } from './validation.js';
+import type { Session } from '../../sessionMiddleware.js';
 
 const authApp = new Hono<Env>();
 
 authApp
   .get('/register', (c) => {
     const session = c.get('session');
-    if (session?.userID) {
+    if (session.isLogin) {
       return c.redirect('/memo');
     }
 
@@ -42,11 +42,14 @@ authApp
       },
     });
 
+    const session = c.get('session');
+    session.serverMessage = `${username}の登録が完了しました`;
+    await session.save();
     return c.redirect('/auth/login');
   })
   .get('/login', (c) => {
     const session = c.get('session');
-    if (session?.userID) {
+    if (session.isLogin) {
       return c.redirect('/memo');
     }
 
@@ -71,16 +74,18 @@ authApp
       return createLoginForm(c, ['ユーザー名またはパスワードが違います']);
     }
 
-    const session = await getSession(c);
-    session.userID = user.id;
-    session.username = user.username;
-
+    const session = c.get('session');
+    Object.assign(session, {
+      isLogin: true,
+      username: user.username,
+      userID: user.id,
+    })
     await session.save();
 
     return c.redirect('/memo');
   })
   .get('/logout', async (c) => {
-    const session = await getSession(c);
+    const session = c.get('session');
     session.destroy();
 
     return c.redirect('/');
