@@ -1,6 +1,6 @@
 import { zValidator } from '@hono/zod-validator';
 import { z } from 'zod';
-import { createLoginForm, createRegisterForm } from './form.js';
+import { createLoginForm, createRegisterForm } from '../../components/auth/AuthForm.js';
 
 const passwordSchema = z
   .string()

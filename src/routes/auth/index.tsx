@@ -1,7 +1,7 @@
 import { type Env, Hono } from 'hono';
 import prisma from '../../prisma.js';
 import { argon2id, hash, verify } from 'argon2';
-import { createLoginForm, createRegisterForm } from './form.js';
+import { createLoginForm, createRegisterForm } from '../../components/auth/AuthForm.js';
 import { loginValidator, registerValidator } from './validation.js';
 
 const authApp = new Hono<Env>();

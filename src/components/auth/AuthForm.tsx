@@ -6,7 +6,7 @@ interface FormProps {
   errorMessages?: string[];
 }
 
-const Form = ({ isRegister, errorMessages }: FormProps) => {
+const AuthForm = ({ isRegister, errorMessages }: FormProps) => {
   const formContainerClass = css`
     display: flex;
     justify-content: center;
@@ -92,14 +92,14 @@ const Form = ({ isRegister, errorMessages }: FormProps) => {
 };
 
 export const createRegisterForm = (c: Context, errorMessages?: string[]) => {
-  return c.render(<Form isRegister={true} errorMessages={errorMessages} />, {
+  return c.render(<AuthForm isRegister={true} errorMessages={errorMessages} />, {
     title: '新規登録',
   });
 };
 
 export const createLoginForm = (c: Context, errorMessages?: string[]) => {
   {
-    return c.render(<Form isRegister={false} errorMessages={errorMessages} />, {
+    return c.render(<AuthForm isRegister={false} errorMessages={errorMessages} />, {
       title: 'ログイン',
     });
   }
