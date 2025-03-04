@@ -68,6 +68,7 @@ const AuthForm = ({ isRegister, errorMessages }: FormProps) => {
             name="username"
             id="username"
             placeholder="username"
+            required
           />
           <input
             class={inputClass}
@@ -75,7 +76,9 @@ const AuthForm = ({ isRegister, errorMessages }: FormProps) => {
             name="password"
             id="password"
             placeholder="password"
+            autocomplete={isRegister ? 'new-password' : 'current-password'}
             minlength={passwordMinLength}
+            required
           />
           <button class={buttonClass} type="submit">
             {isRegister ? '新規登録' : 'ログイン'}
