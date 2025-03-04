@@ -15,7 +15,7 @@ memoApp.get('/', async (c) => {
 
   const memos = await prisma.memo.findMany({
     where: {
-      userId: session.userID,
+      userId: session.user.id,
       deleted: false,
     },
     orderBy: {
@@ -78,7 +78,7 @@ memoApp
       data: {
         title,
         body,
-        userId: session.userID,
+        userId: session.user.id,
         updatedAt: new Date(),
       },
     });
@@ -99,7 +99,7 @@ memoApp
       },
     });
 
-    const isUserMemo = memo?.userId === session.userID;
+    const isUserMemo = memo?.userId === session.user.id;
     if (!isUserMemo) {
       return c.redirect('/forbidden')
     }
@@ -129,7 +129,7 @@ memoApp
       return c.redirect('/forbidden')
     }
 
-    const isUserMemo = memo?.userId === session.userID;
+    const isUserMemo = memo?.userId === session.user.id;
     if (!isUserMemo) {
       return c.redirect('/forbidden')
     }
@@ -174,7 +174,7 @@ memoApp
     const memo = await prisma.memo.update({
       where: {
         id: memoId,
-        userId: session.userID,
+        userId: session.user.id,
       },
       data: {
         deleted: true,

@@ -3,16 +3,21 @@ import { env } from 'hono/adapter';
 import { createMiddleware } from 'hono/factory';
 import { getIronSession, type IronSession } from 'iron-session';
 
+type UserData = {
+  id: number;
+  name: string;
+}
+
 type SessionData = {
   serverMessage?: string;
 } & (
   | {
       isLogin: false;
+      user: undefined;
     }
   | {
       isLogin: true;
-      username: string;
-      userID: number;
+      user: UserData;
     }
 );
 

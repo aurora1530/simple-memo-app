@@ -72,18 +72,24 @@ authApp
     }
 
     const session = c.get('session');
-    Object.assign(session, {
-      isLogin: true,
-      username: user.username,
-      userID: user.id,
-    })
+    session.isLogin = true;
+    session.user = {
+      id: user.id,
+      name: user.username
+    }
+    session.serverMessage = 'ログインしました';
+
     await session.save();
 
     return c.redirect('/memo');
   })
   .get('/logout', async (c) => {
     const session = c.get('session');
-    session.destroy();
+    session.isLogin = false;
+    delete session.user;
+
+    session.serverMessage = 'ログアウトしました';
+    await session.save();
 
     return c.redirect('/');
   });
