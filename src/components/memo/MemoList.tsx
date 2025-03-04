@@ -1,6 +1,6 @@
 import type { Memo } from '@prisma/client';
 import { formatDate, TIMEZONE_OFFSET_JST } from '../../utils/date.js';
-import { css } from 'hono/css';
+import { css, cx } from 'hono/css';
 
 interface MemoListProps {
   memos: Memo[];
@@ -47,8 +47,16 @@ const MemoList = async ({ memos, mode }: MemoListProps) => {
 
   const memoDatesClass = css`
     font-size: 0.8em;
-    color: #888;
     margin-bottom: 8px;
+  `;
+
+  const memoUpdatedAtClass = css`
+    color: #777;
+    font-weight: 500;
+  `;
+
+  const memoCreatedAtClass = css`
+    color: #888;
   `;
 
   const memoActionsClass = css`
@@ -126,10 +134,10 @@ const MemoList = async ({ memos, mode }: MemoListProps) => {
         <div key={memo.id} class={memoCardClass}>
           <div class={memoTitleClass}>{memo.title}</div>
           <div class={memoBodyClass}>{cutDownedBody(memo.body)}</div>
-          <div class={memoDatesClass}>
+          <div class={cx(memoDatesClass, memoUpdatedAtClass)}>
             Updated: {formatDate(memo.updatedAt, TIMEZONE_OFFSET_JST)}
           </div>
-          <div class={memoDatesClass}>
+          <div class={cx(memoDatesClass, memoCreatedAtClass)}>
             Created: {formatDate(memo.createdAt, TIMEZONE_OFFSET_JST)}
           </div>
           <div class={memoActionsClass}>
