@@ -16,6 +16,7 @@ memoApp.get('/', async (c) => {
   const memos = await prisma.memo.findMany({
     where: {
       userId: session.userID,
+      deleted: false,
     },
     orderBy: {
       updatedAt: 'desc',
@@ -91,6 +92,7 @@ memoApp
     const memo = await prisma.memo.findUnique({
       where: {
         id: memoId,
+        deleted: false,
       },
     });
 
@@ -116,6 +118,7 @@ memoApp
       memo = await prisma.memo.findUnique({
         where: {
           id: memoId,
+          deleted: false,
         },
       });
     }catch(e){
@@ -162,10 +165,13 @@ memoApp
     const session = c.get('session');
 
     const memoId = c.req.param('id');
-    const memo = await prisma.memo.delete({
+    const memo = await prisma.memo.update({
       where: {
         id: memoId,
         userId: session.userID,
+      },
+      data: {
+        deleted: true,
       },
     });
 
