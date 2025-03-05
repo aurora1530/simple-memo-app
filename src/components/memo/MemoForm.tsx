@@ -1,6 +1,8 @@
 import { css, Style } from 'hono/css';
 import { MAX_BODY_LENGTH, MAX_TITLE_LENGTH } from '../../routes/memo/constant.js';
 import BackButton from './BackButton.js';
+import { createButtonClass } from '../common/style.js';
+import { blueColorSet } from '../common/color.js';
 
 interface MemoFormProps {
   submitLabel: string;
@@ -62,20 +64,7 @@ const MemoForm = ({
     resize: vertical;
   `;
 
-  const buttonClass = css`
-    padding: 0.75rem;
-    margin-top: 1rem;
-    background: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background 0.3s ease;
-    &:hover {
-      background: #0056b3;
-    }
-  `;
+  const buttonClass = createButtonClass(blueColorSet);
 
   const labelContainerClass = css`
     display: flex;
