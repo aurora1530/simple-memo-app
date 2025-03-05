@@ -1,21 +1,10 @@
 import { css } from 'hono/css';
 import type { FC } from 'hono/jsx';
+import { createButtonClass } from '../common/style.js';
+import { grayColorSet } from '../common/color.js';
 
 const BackButton: FC = () => {
-  const backButtonClass = css`
-    padding: 0.75rem;
-    margin-top: 1rem;
-    background-color: #6c757d;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background 0.3s ease;
-    &:hover {
-      background-color: #5a6268;
-    }
-  `;
+  const backButtonClass = createButtonClass(grayColorSet);
 
   return (
     <button type="button" className={backButtonClass} onclick="history.back()">
