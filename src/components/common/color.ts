@@ -25,3 +25,10 @@ export const greenColorSet: ButtonColorSet = {
   hoverColor: '#c3e6cb',
   bold: false,
 };
+
+export const grayColorSet: ButtonColorSet = {
+  textColor: '#fff',
+  backgroundColor: '#6c757d',
+  hoverColor: '#5a6268',
+  bold: true,
+};
