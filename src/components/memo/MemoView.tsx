@@ -2,6 +2,8 @@ import { css } from 'hono/css';
 import type { Memo } from '@prisma/client';
 import { formatDate, TIMEZONE_OFFSET_JST } from '../../utils/date.js';
 import BackButton from './BackButton.js';
+import { createButtonClass } from '../common/style.js';
+import { blueColorSet } from '../common/color.js';
 
 interface MemoViewProps {
   memo: Memo;
@@ -33,22 +35,10 @@ const MemoView = ({ memo }: MemoViewProps) => {
     font-size: 0.9rem;
     margin-bottom: 0.5rem;
   `;
-  const buttonClass = css`
-    display: inline-block;
-    margin-top: 1rem;
-    background-color: #007bff;
-    color: #fff;
-    padding: 8px 16px;
-    border-radius: 4px;
-    text-decoration: none;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
-    &:hover {
-      background-color: #0056b3;
-    }
-  `;
+  const buttonClass = createButtonClass(blueColorSet);
 
   const bottomButtonContainerClass = css`
+    margin-top: 1rem;
     display: flex;
     justify-content: space-between;
     width: 100%;
