@@ -1,6 +1,7 @@
 import { css } from 'hono/css';
 import type { Memo } from '@prisma/client';
 import { formatDate, TIMEZONE_OFFSET_JST } from '../../utils/date.js';
+import BackButton from './BackButton.js';
 
 interface MemoViewProps {
   memo: Memo;
@@ -34,6 +35,7 @@ const MemoView = ({ memo }: MemoViewProps) => {
   `;
   const buttonClass = css`
     display: inline-block;
+    margin-top: 1rem;
     background-color: #007bff;
     color: #fff;
     padding: 8px 16px;
@@ -46,6 +48,12 @@ const MemoView = ({ memo }: MemoViewProps) => {
     }
   `;
 
+  const bottomButtonContainerClass = css`
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  `;
+
   return (
     <div className={containerClass}>
       <div className={titleClass}>{memo.title}</div>
@@ -56,10 +64,11 @@ const MemoView = ({ memo }: MemoViewProps) => {
       <div className={dateClass}>
         Created: {formatDate(memo.createdAt, TIMEZONE_OFFSET_JST)}
       </div>
-      <div>
+      <div class={bottomButtonContainerClass}>
         <a className={buttonClass} href={`/memo/edit/${memo.id}`}>
           Edit
         </a>
+        <BackButton />
       </div>
     </div>
   );

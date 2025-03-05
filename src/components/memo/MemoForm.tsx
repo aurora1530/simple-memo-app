@@ -1,5 +1,6 @@
 import { css, Style } from 'hono/css';
 import { MAX_BODY_LENGTH, MAX_TITLE_LENGTH } from '../../routes/memo/constant.js';
+import BackButton from './BackButton.js';
 
 interface MemoFormProps {
   submitLabel: string;
@@ -92,6 +93,12 @@ const MemoForm = ({
     color: #666;
   `;
 
+  const bottomButtonContainerClass = css`
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  `;
+
   return (
     <div className={formContainerClass}>
       <Style>
@@ -102,7 +109,6 @@ const MemoForm = ({
           }
         `}
       </Style>
-
       <form method="post" className={formClass} id="memo-form">
         <input type="hidden" id="max-title-length" value={MAX_TITLE_LENGTH} />
         <input type="hidden" id="max-body-length" value={MAX_BODY_LENGTH} />
@@ -141,10 +147,11 @@ const MemoForm = ({
             {defaultBody}
           </textarea>
         </div>
-        <div>
+        <div class={bottomButtonContainerClass}>
           <button className={buttonClass} type="submit">
             {submitLabel}
           </button>
+          <BackButton />
         </div>
         {errorMessages && (
           <div class={errorClass}>
