@@ -56,9 +56,10 @@ const rootRenderer = jsxRenderer(async ({ children, title }) => {
       </head>
       <body>
         <Header />
-        {serverMessage && <div class={messageContainerClass}>{serverMessage}</div>}
+        {serverMessage && <div class={messageContainerClass} id="server-message">{serverMessage}</div>}
         <main>{children}</main>
         <Footer />
+        <script src="/public/common.js"></script>
       </body>
     </html>
   );
