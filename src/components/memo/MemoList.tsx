@@ -27,10 +27,13 @@ const MemoList = async ({ memos, mode }: MemoListProps) => {
     display: flex;
     flex-direction: column;
 
-    cursor: pointer;
     &:hover {
       transform: translateY(-2px);
     }
+  `;
+
+  const cursorPointerClass = css`
+    cursor: pointer;
   `;
 
   const memoTitleClass = css`
@@ -144,7 +147,7 @@ const MemoList = async ({ memos, mode }: MemoListProps) => {
       {memos.map((memo) => (
         <div
           key={memo.id}
-          class={memoCardClass}
+          class={cx(memoCardClass, mode === 'list' && cursorPointerClass)}
           onclick={mode === 'list' && `location.href='/memo/view/${memo.id}'`}
         >
           <div class={memoTitleClass}>{memo.title}</div>
