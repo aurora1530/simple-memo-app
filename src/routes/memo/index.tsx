@@ -293,6 +293,33 @@ memoApp
     return c.render(<MemoView memo={unsealedMemo[0]} />, {
       title: 'View Memo',
     });
+  })
+  .delete('/deleteCompletely/:id', async (c) => {
+    const session = c.get('session');
+
+    const memoId = c.req.param('id');
+
+    const memo = await prisma.memo.findUnique({
+      where: {
+        id: memoId,
+        userId: session.user.id,
+      },
+    });
+
+    if (!memo) {
+      return c.redirect('/forbidden');
+    }
+
+    await prisma.memo.delete({
+      where: {
+        id: memoId,
+      },
+    });
+
+    session.serverMessage = 'メモを完全に削除しました';
+    await session.save();
+
+    return c.json({});
   });
 
 export default memoApp;

@@ -159,21 +159,31 @@ const MemoList = async ({ memos, mode }: MemoListProps) => {
               </>
             ) : (
               <>
-                <div>{/* empty for design*/}</div>
                 <button
                   class={restoreButtonClass}
                   onclick={`restoreMemo("${memo.id}");event.stopPropagation();`}
                 >
                   Restore
                 </button>
+                <button
+                  class={deleteButtonClass}
+                  onclick={`deleteCompletelyMemo("${memo.id}");event.stopPropagation();`}
+                >
+                  Delete completely
+                </button>
               </>
             )}
           </div>
         </div>
       ))}
-      <script
-        src={mode === 'list' ? '/public/memoDelete.js' : '/public/memoRestore.js'}
-      ></script>
+      {mode === 'list' ? (
+        <script src="/public/memoDelete.js" />
+      ) : (
+        <>
+          <script src="/public/memoRestore.js" />
+          <script src="/public/memoDeleteCompletely.js" />
+        </>
+      )}
     </div>
   );
 };
