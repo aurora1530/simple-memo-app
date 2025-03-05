@@ -1,6 +1,7 @@
 import type { Memo } from '@prisma/client';
 import { formatDate, TIMEZONE_OFFSET_JST } from '../../utils/date.js';
 import { css, cx } from 'hono/css';
+import { createButtonClass } from '../common/style.js';
 
 interface MemoListProps {
   memos: Memo[];
@@ -76,49 +77,44 @@ const MemoList = async ({ memos, mode }: MemoListProps) => {
     pointer-events: auto;
   `;
 
-  const editButtonClass = css`
-    background-color: #007bff;
-    color: #fff;
-    padding: 8px 16px;
-    border-radius: 4px;
-    text-decoration: none;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
-    &:hover {
-      background-color: #0056b3;
-    }
-    pointer-events: all;
-  `;
+  const editButtonClass = cx(
+    createButtonClass({
+      backgroundColor: '#007bff',
+      hoverColor: '#0056b3',
+    }),
+    css`
+      pointer-events: all;
+    `
+  );
 
-  const deleteButtonClass = css`
-    background-color: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
-    border-radius: 4px;
-    padding: 6px 12px;
-    font-size: 0.9em;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    &:hover {
-      background-color: #f1b0b7;
-    }
-    pointer-events: all;
-  `;
+  const deleteButtonClass = cx(
+    createButtonClass({
+      textColor: '#721c24',
+      backgroundColor: '#f8d7da',
+      hoverColor: '#f1b0b7',
+      bold: false,
+    }),
+    css`
+      border: 1px solid #f5c6cb;
+      padding: 6px 12px;
+      font-size: 0.9em;
+      pointer-events: all;
+    `
+  );
 
-  const restoreButtonClass = css`
-    background-color: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
-    border-radius: 4px;
-    padding: 6px 12px;
-    font-size: 0.9em;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    &:hover {
-      background-color: #c1e2b3;
-    }
-    pointer-events: all;
-  `;
+  const restoreButtonClass = cx(
+    createButtonClass({
+      textColor: '#155724',
+      backgroundColor: '#d4edda',
+      hoverColor: '#c3e6cb',
+      bold: false,
+    }),
+    css`
+      border: 1px solid #c3e6cb;
+      font-size: 0.9em;
+      pointer-events: all;
+    `
+  );
 
   const noMemoMessageClass = css`
     text-align: center;
