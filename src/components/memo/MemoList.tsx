@@ -2,7 +2,7 @@ import type { Memo } from '@prisma/client';
 import { formatDate, TIMEZONE_OFFSET_JST } from '../../utils/date.js';
 import { css, cx } from 'hono/css';
 import { createButtonClass } from '../common/style.js';
-import { blueColorSet, redColorSet } from '../common/color.js';
+import { blueColorSet, greenColorSet, redColorSet } from '../common/color.js';
 
 interface MemoListProps {
   memos: Memo[];
@@ -96,12 +96,7 @@ const MemoList = async ({ memos, mode }: MemoListProps) => {
   );
 
   const restoreButtonClass = cx(
-    createButtonClass({
-      textColor: '#155724',
-      backgroundColor: '#d4edda',
-      hoverColor: '#c3e6cb',
-      bold: false,
-    }),
+    createButtonClass(greenColorSet),
     css`
       border: 1px solid #c3e6cb;
       font-size: 0.9em;
