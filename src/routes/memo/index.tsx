@@ -4,10 +4,12 @@ import prisma from '../../prisma.js';
 import MemoList from '../../components/memo/MemoList.js';
 import MemoForm from '../../components/memo/MemoForm.js';
 import { memoValidation } from './validation.js';
-import { css } from 'hono/css';
+import { css, cx } from 'hono/css';
 import { sealMemoTitleAndBody, unsealMemoTitleAndBody, unsealMemoList } from './seal.js';
 import { MAX_MEMO_COUNT } from './constant.js';
 import MemoView from '../../components/memo/MemoView.js';
+import { createButtonClass } from '../../components/common/style.js';
+import { blueColorSet, redColorSet } from '../../components/common/color.js';
 
 const memoApp = new Hono<LoginedEnv>();
 memoApp.use(ensureLoginedMiddleware);
@@ -19,19 +21,14 @@ const headingClass = css`
   color: #333;
 `;
 
-const createMemoButtonClass = css`
-  display: inline-block;
-  background-color: #007bff;
-  color: #fff;
-  padding: 10px 20px;
+const buttonCommonClass = css`
   margin: 0 10px;
-  border-radius: 4px;
-  text-decoration: none;
-  transition: background 0.3s ease;
-  &:hover {
-    background-color: #0056b3;
-  }
+  font-size: 1.2em;
 `;
+
+const createMemoButtonClass = cx(createButtonClass(blueColorSet), buttonCommonClass);
+
+const trashMemoButtonClass = cx(createButtonClass(redColorSet), buttonCommonClass);
 
 const topContainerClass = css`
   text-align: center;
@@ -61,7 +58,7 @@ memoApp
           <a href="/memo/create" class={createMemoButtonClass}>
             メモを作成
           </a>
-          <a href="/memo/trash" class={createMemoButtonClass}>
+          <a href="/memo/trash" class={trashMemoButtonClass}>
             ゴミ箱
           </a>
         </div>
