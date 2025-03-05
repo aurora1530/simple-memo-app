@@ -38,7 +38,6 @@ const MemoForm = ({
   // エラーメッセージ用スタイル
   const errorClass = css`
     color: #ff0000;
-    margin-bottom: 1rem;
     font-weight: bold;
   `;
 
