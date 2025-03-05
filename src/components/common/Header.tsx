@@ -60,7 +60,12 @@ const Header: FC = async () => {
               <span>
                 ログイン中: <strong>{session.user.name}</strong>
               </span>
-              <a href="/auth/logout">ログアウト</a>
+              <a
+                href="/auth/logout"
+                onclick={`if (!confirm('ログアウトしますか？')) event.preventDefault();`}
+              >
+                ログアウト
+              </a>
             </>
           ) : (
             <>
