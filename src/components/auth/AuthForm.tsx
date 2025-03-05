@@ -1,6 +1,8 @@
 import type { Context } from 'hono';
-import { css } from 'hono/css';
+import { css, cx } from 'hono/css';
 import { passwordMinLength } from '../../routes/auth/constant.js';
+import { createButtonClass } from '../common/style.js';
+import { blueColorSet } from '../common/color.js';
 
 interface FormProps {
   isRegister: boolean;
@@ -43,25 +45,18 @@ const AuthForm = ({ isRegister, defaultUsername, errorMessages }: FormProps) => 
     font-size: 1rem;
   `;
 
-  const buttonClass = css`
-    width: 100%;
-    padding: 0.75rem;
-    margin-top: 1rem;
-    background: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background 0.3s ease;
-    &:hover {
-      background: #0056b3;
-    }
-  `;
+  const buttonClass = cx(
+    createButtonClass(blueColorSet),
+    css`
+      width: 100%;
+      margin-top: 1rem;
+      font-size: 1.2rem;
+    `
+  );
 
   const passwordHintBoxClass = css`
     width: 100%;
-    background-color:rgb(237, 244, 252);
+    background-color: rgb(237, 244, 252);
     border: 1px solid #b8daff;
     border-radius: 4px;
     padding: 1rem;
