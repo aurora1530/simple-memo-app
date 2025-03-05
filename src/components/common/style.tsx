@@ -11,6 +11,7 @@ export const createButtonClass = (createButtonClassProps: CreateButtonClassProps
   border: none;
   border-radius: 4px;
   text-decoration: none;
+  font-size: 1rem;
   font-weight: ${createButtonClassProps.bold ? 'bold' : 'normal'};
   cursor: pointer;
   color: ${createButtonClassProps.textColor};
