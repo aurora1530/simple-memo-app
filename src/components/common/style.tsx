@@ -1,17 +1,9 @@
 import { css } from 'hono/css';
+import type { ButtonColorSet } from './color.js';
 
-interface CreateButtonClassProps {
-  textColor?: string;
-  backgroundColor: string;
-  hoverColor: string;
-  bold?: boolean;
-}
-export const createButtonClass = ({
-  textColor = '#fff',
-  backgroundColor,
-  hoverColor,
-  bold = true,
-}: CreateButtonClassProps) => css`
+type CreateButtonClassProps = {} & ButtonColorSet;
+
+export const createButtonClass = (createButtonClassProps: CreateButtonClassProps) => css`
   padding: 8px 16px;
   border-radius: 4px;
   text-decoration: none;
@@ -19,11 +11,11 @@ export const createButtonClass = ({
   border: none;
   border-radius: 4px;
   text-decoration: none;
-  font-weight: ${bold ? 'bold' : 'normal'};
+  font-weight: ${createButtonClassProps.bold ? 'bold' : 'normal'};
   cursor: pointer;
-  color: ${textColor};
-  background-color: ${backgroundColor};
+  color: ${createButtonClassProps.textColor};
+  background-color: ${createButtonClassProps.backgroundColor};
   &:hover {
-    background-color: ${hoverColor};
+    background-color: ${createButtonClassProps.hoverColor};
   }
 `;
