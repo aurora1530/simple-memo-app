@@ -2,6 +2,7 @@ import { type Env, Hono } from 'hono';
 import authApp from './auth/index.js';
 import memoApp from './memo/index.js';
 import { css } from 'hono/css';
+import prisma from '../prisma.js';
 
 const indexApp = new Hono<Env>();
 
@@ -84,6 +85,26 @@ indexApp.get('/forbidden', (c) => {
       title: 'Forbidden',
     }
   );
+});
+
+indexApp.get('/healthCheck', async (c) => {
+  try {
+    await prisma.$queryRaw`SELECT 1;`;
+
+    return c.json(
+      {
+        status: 'ok',
+      },
+      200
+    );
+  } catch (error) {
+    return c.json(
+      {
+        status: 'ng',
+      },
+      503
+    );
+  }
 });
 
 export default indexApp;
