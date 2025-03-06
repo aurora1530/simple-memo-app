@@ -1,9 +1,10 @@
 import type { Context } from 'hono';
 import { css, cx } from 'hono/css';
-import { passwordMinLength } from '../../routes/auth/constant.js';
 import { createButtonClass } from '../common/style.js';
 import { blueColorSet } from '../common/color.js';
 import HintBox from './HintBox.js';
+import { inputClass } from './style.js';
+import PasswordInput from './PasswordInput.js';
 
 interface FormProps {
   isRegister: boolean;
@@ -37,15 +38,6 @@ const AuthForm = ({ isRegister, defaultUsername, errorMessages }: FormProps) => 
     font-weight: bold;
   `;
 
-  const inputClass = css`
-    width: 100%;
-    padding: 0.75rem;
-    margin: 0.5rem 0;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 1rem;
-  `;
-
   const buttonClass = cx(
     createButtonClass(blueColorSet),
     css`
@@ -68,15 +60,8 @@ const AuthForm = ({ isRegister, defaultUsername, errorMessages }: FormProps) => 
             value={defaultUsername}
             required
           />
-          <input
-            class={inputClass}
-            type="password"
-            name="password"
-            id="password"
-            placeholder="password"
+          <PasswordInput
             autocomplete={isRegister ? 'new-password' : 'current-password'}
-            minlength={passwordMinLength}
-            required
           />
           {isRegister && <HintBox />}
           <button class={buttonClass} type="submit">
