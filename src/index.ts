@@ -21,14 +21,14 @@ app.route('/', indexApp);
 app
   .notFound((c) => {
     c.status(404);
-    return c.render('ページが見つかりませんでした。code: 404', {
+    return c.render('ページが見つかりませんでした。code: 404 Not Found', {
       title: '404 Not Found',
     });
   })
   .onError((err, c) => {
     console.error(err);
     c.status(500);
-    return c.render('エラーが発生しました。code: 500', {
+    return c.render('エラーが発生しました。code: 500 Internal Server Error', {
       title: '500 Internal Server Error',
     });
   });
