@@ -57,9 +57,9 @@ const Header: FC = async () => {
         <div className="auth-links">
           {session.isLogin ? (
             <>
-              <span>
+              <a href="/profile">
                 ログイン中: <strong>{session.user.name}</strong>
-              </span>
+              </a>
               <a
                 href="/auth/logout"
                 onclick={`if (!confirm('ログアウトしますか？')) event.preventDefault();`}

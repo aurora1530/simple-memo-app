@@ -3,11 +3,13 @@ import authApp from './auth/index.js';
 import memoApp from './memo/index.js';
 import { css } from 'hono/css';
 import prisma from '../prisma.js';
+import profileApp from './profile/index.js';
 
 const indexApp = new Hono<Env>();
 
 indexApp.route('/auth', authApp);
 indexApp.route('/memo', memoApp);
+indexApp.route('/profile', profileApp);
 
 indexApp.get('/', (c) => {
   const session = c.get('session');
