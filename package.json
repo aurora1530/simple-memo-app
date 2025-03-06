@@ -11,7 +11,7 @@
     "@hono/zod-validator": "^0.4.3",
     "@prisma/client": "^6.4.1",
     "argon2": "^0.41.1",
-    "hono": "^4.7.2",
+    "hono": "^4.7.4",
     "iron-session": "^8.0.4",
     "iron-webcrypto": "^1.2.1",
     "uncrypto": "^0.1.3",
