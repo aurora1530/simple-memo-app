@@ -85,7 +85,7 @@ const MemoView = (props: MemoViewProps) => {
             Edit
           </a>
           <>
-            <ShareButton memoId={memo.id} />
+            <ShareButton memoId={memo.id} alreadyShared={!!memo.shareToken} />
             {props.enableShare && (
               <button class={redButtonClass} onclick={`deleteShareLink("${memo.id}")`}>
                 Stop sharing

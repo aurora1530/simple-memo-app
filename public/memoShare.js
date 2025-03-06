@@ -1,11 +1,8 @@
-async function createShareLink(memoId) {
-  if (
-    !confirm(
-      '共有リンクを新たに作成しますか？既に作成されている共有リンクは無効化されます。'
-    )
-  ) {
-    return;
-  }
+async function createShareLink(memoId, alreadyShared = false) {
+  const confirmed = alreadyShared ?? confirm('共有リンクを新たに作成しますか？');
+
+  if (!confirmed) return;
+
   const res = await fetch(`/memo/share/${memoId}`, {
     method: 'POST',
     headers: {

@@ -10,9 +10,8 @@ import { MAX_MEMO_COUNT } from './constant.js';
 import MemoView from '../../components/memo/MemoView.js';
 import { createButtonClass } from '../../components/common/style.js';
 import { blueColorSet, redColorSet } from '../../components/common/color.js';
-import { createToken } from './token.js';
+import { createShareLink, createToken } from './token.js';
 import shareModal from '../../components/memo/ShareModal.js';
-import { ORIGIN } from '../../constant.js';
 
 const memoApp = new Hono<LoginedEnv>();
 memoApp.use(ensureLoginedMiddleware);
@@ -348,9 +347,15 @@ memoApp
       return c.redirect('/forbidden');
     }
 
+    if (memo.shareToken) {
+      return c.json({
+        shareLink: createShareLink(memo.shareToken),
+      });
+    }
+
     const token = createToken();
 
-    const shareLink = `${ORIGIN}/share/view/${encodeURIComponent(token)}`;
+    const shareLink = createShareLink(token);
 
     await prisma.memo.update({
       where: {
