@@ -34,6 +34,13 @@ const MemoList = async ({ memos, mode }: MemoListProps) => {
     }
   `;
 
+  const sharedCard = css`
+    border: 5px solid ${greenColorSet.backgroundColor};
+    &:hover {
+      border: 5px solid ${greenColorSet.hoverColor};
+    }
+  `;
+
   const cursorPointerClass = css`
     cursor: pointer;
   `;
@@ -128,54 +135,64 @@ const MemoList = async ({ memos, mode }: MemoListProps) => {
 
   return (
     <div class={memoContainerClass}>
-      {memos.map((memo) => (
-        <div
-          key={memo.id}
-          class={cx(memoCardClass, mode === 'list' && cursorPointerClass)}
-          onclick={mode === 'list' && `location.href='/memo/view/${memo.id}'`}
-        >
-          <div class={memoTitleClass}>{memo.title}</div>
-          <div class={memoBodyClass}>{cutDownedBody(memo.body)}</div>
-          <div class={dateContainerClass}>
-            <div class={cx(memoDatesClass, memoUpdatedAtClass)}>
-              Updated: {formatDate(memo.updatedAt, TIMEZONE_OFFSET_JST)}
-            </div>
-            <div class={cx(memoDatesClass, memoCreatedAtClass)}>
-              Created: {formatDate(memo.createdAt, TIMEZONE_OFFSET_JST)}
-            </div>
-          </div>
-          <div class={memoActionsClass}>
-            {mode === 'list' ? (
-              <>
-                <a class={editButtonClass} href={`/memo/edit/${memo.id}`}>
-                  Edit
-                </a>
-                <button
-                  class={deleteButtonClass}
-                  onclick={`deleteMemo("${memo.id}");event.stopPropagation();`}
-                >
-                  Delete
-                </button>
-              </>
-            ) : (
-              <>
-                <button
-                  class={restoreButtonClass}
-                  onclick={`restoreMemo("${memo.id}");event.stopPropagation();`}
-                >
-                  Restore
-                </button>
-                <button
-                  class={deleteButtonClass}
-                  onclick={`deleteCompletelyMemo("${memo.id}");event.stopPropagation();`}
-                >
-                  Delete completely
-                </button>
-              </>
+      {memos.map((memo) => {
+        const alreadyShared = !!memo.shareToken;
+        return (
+          <div
+            key={memo.id}
+            class={cx(
+              memoCardClass,
+              mode === 'list' && cursorPointerClass,
+              alreadyShared && sharedCard
             )}
+            onclick={mode === 'list' && `location.href='/memo/view/${memo.id}'`}
+          >
+            <div class={memoTitleClass}>{memo.title}</div>
+            <div class={memoBodyClass}>{cutDownedBody(memo.body)}</div>
+            <div class={dateContainerClass}>
+              <div class={cx(memoDatesClass, memoUpdatedAtClass)}>
+                Updated: {formatDate(memo.updatedAt, TIMEZONE_OFFSET_JST)}
+              </div>
+              <div class={cx(memoDatesClass, memoCreatedAtClass)}>
+                Created: {formatDate(memo.createdAt, TIMEZONE_OFFSET_JST)}
+              </div>
+            </div>
+            <div class={memoActionsClass}>
+              {mode === 'list' ? (
+                // 一覧表示の場合
+                <>
+                  <a class={editButtonClass} href={`/memo/edit/${memo.id}`}>
+                    Edit
+                  </a>
+                  {alreadyShared && <span class={restoreButtonClass}>共有中</span>}
+                  <button
+                    class={deleteButtonClass}
+                    onclick={`deleteMemo("${memo.id}");event.stopPropagation();`}
+                  >
+                    Delete
+                  </button>
+                </>
+              ) : (
+                // ゴミ箱の場合
+                <>
+                  <button
+                    class={restoreButtonClass}
+                    onclick={`restoreMemo("${memo.id}");event.stopPropagation();`}
+                  >
+                    Restore
+                  </button>
+                  <button
+                    class={deleteButtonClass}
+                    onclick={`deleteCompletelyMemo("${memo.id}");event.stopPropagation();`}
+                  >
+                    Delete completely
+                  </button>
+                </>
+              )}
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
       {mode === 'list' ? (
         <script src="/public/memoDelete.js" />
       ) : (
