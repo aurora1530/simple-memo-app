@@ -3,13 +3,26 @@ import type { Memo } from '@prisma/client';
 import { formatDate, TIMEZONE_OFFSET_JST } from '../../utils/date.js';
 import BackButton from './BackButton.js';
 import { createButtonClass } from '../common/style.js';
-import { blueColorSet } from '../common/color.js';
+import { blueColorSet, redColorSet } from '../common/color.js';
+import ShareButton from './ShareButton.js';
 
-interface MemoViewProps {
+type MemoViewProps = {
   memo: Memo;
-}
+  isShareView: boolean;
+} & (
+  | {
+      isShareView: true;
+      username: string;
+    }
+  | {
+      isShareView: false;
+      enableShare: boolean;
+    }
+);
 
-const MemoView = ({ memo }: MemoViewProps) => {
+const MemoView = (props: MemoViewProps) => {
+  const { memo, isShareView } = props;
+
   const containerClass = css`
     max-width: 600px;
     margin: 2rem auto;
@@ -35,7 +48,10 @@ const MemoView = ({ memo }: MemoViewProps) => {
     font-size: 0.9rem;
     margin-bottom: 0.5rem;
   `;
+
   const buttonClass = createButtonClass(blueColorSet);
+
+  const redButtonClass = createButtonClass(redColorSet);
 
   const bottomButtonContainerClass = css`
     margin-top: 1rem;
@@ -44,8 +60,17 @@ const MemoView = ({ memo }: MemoViewProps) => {
     width: 100%;
   `;
 
+  const usernameClass = css`
+    color: #666;
+    font-size: 1.2rem;
+    font-weight: bold;
+    font-style: italic;
+    margin: 0 0 1rem 0;
+  `;
+
   return (
     <div className={containerClass}>
+      {isShareView && <p class={usernameClass}>Shared by: {props.username}</p>}
       <div className={titleClass}>{memo.title}</div>
       <div className={bodyClass}>{memo.body}</div>
       <div className={dateClass}>
@@ -54,12 +79,22 @@ const MemoView = ({ memo }: MemoViewProps) => {
       <div className={dateClass}>
         Created: {formatDate(memo.createdAt, TIMEZONE_OFFSET_JST)}
       </div>
-      <div class={bottomButtonContainerClass}>
-        <a className={buttonClass} href={`/memo/edit/${memo.id}`}>
-          Edit
-        </a>
-        <BackButton />
-      </div>
+      {!isShareView && (
+        <div class={bottomButtonContainerClass}>
+          <a className={buttonClass} href={`/memo/edit/${memo.id}`}>
+            Edit
+          </a>
+          <>
+            <ShareButton memoId={memo.id} />
+            {props.enableShare && (
+              <button class={redButtonClass} onclick={`deleteShareLink("${memo.id}")`}>
+                Stop sharing
+              </button>
+            )}
+          </>
+          <BackButton />
+        </div>
+      )}
     </div>
   );
 };

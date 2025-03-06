@@ -10,6 +10,9 @@ import { MAX_MEMO_COUNT } from './constant.js';
 import MemoView from '../../components/memo/MemoView.js';
 import { createButtonClass } from '../../components/common/style.js';
 import { blueColorSet, redColorSet } from '../../components/common/color.js';
+import { createShareValue } from '../../share.js';
+import shareModal from '../../components/memo/ShareModal.js';
+import { ORIGIN } from '../../constant.js';
 
 const memoApp = new Hono<LoginedEnv>();
 memoApp.use(ensureLoginedMiddleware);
@@ -290,9 +293,17 @@ memoApp
 
     const unsealedMemo = await unsealMemoList(c, [memo]);
 
-    return c.render(<MemoView memo={unsealedMemo[0]} />, {
-      title: 'View Memo',
-    });
+    return c.render(
+      <MemoView
+        memo={unsealedMemo[0]}
+        isShareView={false}
+        enableShare={memo.enableShare}
+      />,
+      {
+        title: 'View Memo',
+        modal: shareModal,
+      }
+    );
   })
   .delete('/deleteCompletely/:id', async (c) => {
     const session = c.get('session');
@@ -320,6 +331,58 @@ memoApp
     await session.save();
 
     return c.json({});
+  })
+  .post('/share/:id', async (c) => {
+    const session = c.get('session');
+
+    const memoId = c.req.param('id');
+    const memo = await prisma.memo.findUnique({
+      where: {
+        id: memoId,
+        deleted: false,
+      },
+    });
+
+    const isUserMemo = memo?.userId === session.user.id;
+    if (!isUserMemo) {
+      return c.redirect('/forbidden');
+    }
+
+    const shareParam = await createShareValue(c, {
+      memoId,
+    });
+
+    const shareLink = `${ORIGIN}/share/view/${shareParam}`;
+
+    await prisma.memo.update({
+      where: {
+        id: memoId,
+      },
+      data: {
+        enableShare: true,
+      },
+    });
+
+    return c.json({
+      shareLink: shareLink,
+    });
+  })
+  .delete('/share/:id', async (c) => {
+    const session = c.get('session');
+
+    const memoId = c.req.param('id');
+
+    await prisma.memo.update({
+      where: {
+        id: memoId,
+        userId: session.user.id,
+      },
+      data: {
+        enableShare: false,
+      },
+    });
+
+    return c.json({ success: 'ok' });
   });
 
 export default memoApp;
