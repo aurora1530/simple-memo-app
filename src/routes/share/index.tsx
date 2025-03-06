@@ -1,24 +1,17 @@
 import { Hono } from 'hono';
-import { unsealShareValue } from '../../share.js';
 import prisma from '../../prisma.js';
 import MemoView from '../../components/memo/MemoView.js';
 import { unsealMemoList } from '../memo/seal.js';
 
 const shareApp = new Hono();
 
-shareApp.get('/view/:sealedValue', async (c) => {
-  const sealedValue = c.req.param('sealedValue');
+shareApp.get('/view/:token', async (c) => {
+  const token = decodeURIComponent(c.req.param('token'));
 
-  const unsealedValue = await unsealShareValue(c, sealedValue);
-  if (!unsealedValue) {
-    return c.redirect('/forbidden');
-  }
-
-  const sealedMemo = await prisma.memo.findUnique({
+  const sealedMemo = await prisma.memo.findFirst({
     where: {
-      id: unsealedValue,
       deleted: false,
-      enableShare: true,
+      shareToken: token,
     },
   });
 

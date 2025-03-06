@@ -10,7 +10,7 @@ import { MAX_MEMO_COUNT } from './constant.js';
 import MemoView from '../../components/memo/MemoView.js';
 import { createButtonClass } from '../../components/common/style.js';
 import { blueColorSet, redColorSet } from '../../components/common/color.js';
-import { createShareValue } from '../../share.js';
+import { createToken } from './token.js';
 import shareModal from '../../components/memo/ShareModal.js';
 import { ORIGIN } from '../../constant.js';
 
@@ -297,7 +297,7 @@ memoApp
       <MemoView
         memo={unsealedMemo[0]}
         isShareView={false}
-        enableShare={memo.enableShare}
+        enableShare={!!memo.shareToken}
       />,
       {
         title: 'View Memo',
@@ -339,27 +339,25 @@ memoApp
     const memo = await prisma.memo.findUnique({
       where: {
         id: memoId,
+        userId: session.user.id,
         deleted: false,
       },
     });
 
-    const isUserMemo = memo?.userId === session.user.id;
-    if (!isUserMemo) {
+    if (!memo) {
       return c.redirect('/forbidden');
     }
 
-    const shareParam = await createShareValue(c, {
-      memoId,
-    });
+    const token = createToken();
 
-    const shareLink = `${ORIGIN}/share/view/${shareParam}`;
+    const shareLink = `${ORIGIN}/share/view/${encodeURIComponent(token)}`;
 
     await prisma.memo.update({
       where: {
         id: memoId,
       },
       data: {
-        enableShare: true,
+        shareToken: token,
       },
     });
 
@@ -378,7 +376,7 @@ memoApp
         userId: session.user.id,
       },
       data: {
-        enableShare: false,
+        shareToken: undefined,
       },
     });
 

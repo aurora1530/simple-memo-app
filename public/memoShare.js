@@ -1,5 +1,9 @@
 async function createShareLink(memoId) {
-  if (!confirm('共有リンクを作成しますか？')) {
+  if (
+    !confirm(
+      '共有リンクを新たに作成しますか？既に作成されている共有リンクは無効化されます。'
+    )
+  ) {
     return;
   }
   const res = await fetch(`/memo/share/${memoId}`, {
@@ -16,7 +20,7 @@ async function createShareLink(memoId) {
 }
 
 async function deleteShareLink(memoId) {
-  if (!confirm('共有を停止しますか？全ての共有リンクが無効化されます。')) {
+  if (!confirm('共有を停止しますか？共有リンクが無効化されます。')) {
     return;
   }
   const res = await fetch(`/memo/share/${memoId}`, {
