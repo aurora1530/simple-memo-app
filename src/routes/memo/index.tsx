@@ -376,7 +376,7 @@ memoApp
         userId: session.user.id,
       },
       data: {
-        shareToken: undefined,
+        shareToken: null,
       },
     });
 
