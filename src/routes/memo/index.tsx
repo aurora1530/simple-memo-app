@@ -213,6 +213,7 @@ memoApp
       },
       data: {
         deleted: true,
+        shareToken: null,
       },
     });
 
