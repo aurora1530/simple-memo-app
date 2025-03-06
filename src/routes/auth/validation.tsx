@@ -1,7 +1,13 @@
 import { zValidator } from '@hono/zod-validator';
 import { z } from 'zod';
-import { createLoginForm, createRegisterForm } from '../../components/auth/AuthForm.js';
+import {
+  createChangePasswordForm,
+  createLoginForm,
+  createRegisterForm,
+} from '../../components/auth/AuthForm.js';
 import { passwordMinLength } from './constant.js';
+import prisma from '../../prisma.js';
+import { verify } from 'argon2';
 
 const passwordSchema = z
   .string()
@@ -42,6 +48,68 @@ export const loginValidator = zValidator(
       return createLoginForm(c, {
         errorMessages,
         defaultUsername: result.data.username,
+      });
+    }
+  }
+);
+
+export const changePasswordValidator = zValidator(
+  'form',
+  z.object({
+    oldPassword: z.string(),
+    newPassword: passwordSchema,
+    newPasswordConfirm: passwordSchema,
+  }),
+  async (result, c) => {
+    const session = c.get('session');
+    if (!session.isLogin) {
+      return c.redirect('/auth/login');
+    }
+
+    const userID = session.user.id;
+    const savedUser = await prisma.user.findUnique({
+      where: {
+        id: userID,
+      },
+    });
+
+    if (!savedUser) {
+      return c.redirect('/auth/login');
+    }
+
+    const verifyOldPasswordIsCorrect = await verify(
+      savedUser.passwordHash,
+      result.data.oldPassword
+    );
+    if (!verifyOldPasswordIsCorrect) {
+      return createChangePasswordForm(c, {
+        errorMessages: ['現在のパスワードが違います'],
+      });
+    }
+
+    const verifyNewPasswordIsEqual =
+      result.data.newPassword === result.data.newPasswordConfirm;
+    if (!verifyNewPasswordIsEqual) {
+      return createChangePasswordForm(c, {
+        errorMessages: ['新しいパスワードが一致しません'],
+      });
+    }
+
+    const verifyNewPasswordIsDifferent = await verify(
+      savedUser.passwordHash,
+      result.data.newPassword
+    );
+    if (verifyNewPasswordIsDifferent) {
+      // `oldPassword`が正しいことは確認済みなので、このエラーメッセージを表示しても問題ない。
+      return createChangePasswordForm(c, {
+        errorMessages: ['新しいパスワードは現在のパスワードと異なる必要があります'],
+      });
+    }
+
+    if (!result.success) {
+      const errorMessages = result.error.errors.map((e) => e.message)
+      return createChangePasswordForm(c, {
+        errorMessages: Array.from(new Set(errorMessages)),
       });
     }
   }

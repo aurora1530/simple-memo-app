@@ -1,8 +1,17 @@
 import { type Env, Hono } from 'hono';
 import prisma from '../../prisma.js';
 import { argon2id, hash, verify } from 'argon2';
-import { createLoginForm, createRegisterForm } from '../../components/auth/AuthForm.js';
-import { loginValidator, registerValidator } from './validation.js';
+import {
+  createChangePasswordForm,
+  createLoginForm,
+  createRegisterForm,
+} from '../../components/auth/AuthForm.js';
+import {
+  changePasswordValidator,
+  loginValidator,
+  registerValidator,
+} from './validation.js';
+import { setLogoutToSession, type Session } from '../../session.js';
 
 const authApp = new Hono<Env>();
 
@@ -91,13 +100,43 @@ authApp
   })
   .get('/logout', async (c) => {
     const session = c.get('session');
-    session.isLogin = false;
-    delete session.user;
+    setLogoutToSession(session);
 
     session.serverMessage = 'ログアウトしました';
     await session.save();
 
     return c.redirect('/');
+  })
+  .get('/changePassword', (c) => {
+    const session = c.get('session');
+    if (!session.isLogin) {
+      return c.redirect('/auth/login');
+    }
+
+    return createChangePasswordForm(c);
+  })
+  .post('/changePassword', changePasswordValidator, async (c) => {
+    const { newPassword } = c.req.valid('form');
+    const session = c.get('session') as Session & { isLogin: true }; // Validatorで確認済み
+
+    const hashedPassword = await hash(newPassword, {
+      type: argon2id,
+    });
+
+    await prisma.user.update({
+      where: {
+        id: session.user.id,
+      },
+      data: {
+        passwordHash: hashedPassword,
+      },
+    });
+
+    session.serverMessage = 'パスワードを変更しました。ログインし直してください。';
+    setLogoutToSession(session);
+    await session.save();
+
+    return c.redirect('/auth/login');
   });
 
 export default authApp;

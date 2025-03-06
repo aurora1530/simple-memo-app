@@ -6,7 +6,7 @@ import { getIronSession, type IronSession } from 'iron-session';
 type UserData = {
   id: number;
   name: string;
-}
+};
 
 type SessionData = {
   serverMessage?: string;
@@ -37,6 +37,11 @@ export const sessionMiddleware = createMiddleware<Env>(async (c, next) => {
   c.set('session', session);
   await next();
 });
+
+export const setLogoutToSession = async (session: Session) => {
+  session.isLogin = false;
+  delete session.user;
+};
 
 export type LoginedEnv = Env & {
   Variables: {

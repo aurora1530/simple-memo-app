@@ -5,6 +5,7 @@ import { blueColorSet } from '../common/color.js';
 import HintBox from './HintBox.js';
 import { inputClass } from './style.js';
 import PasswordInput from './PasswordInput.js';
+import type { FC } from 'hono/jsx';
 
 interface FormProps {
   isRegister: boolean;
@@ -12,35 +13,35 @@ interface FormProps {
   errorMessages?: string[];
 }
 
-const AuthForm = ({ isRegister, defaultUsername, errorMessages }: FormProps) => {
-  const formContainerClass = css`
-    display: flex;
-    justify-content: center;
-    margin-top: 2rem;
-  `;
+const formContainerClass = css`
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+`;
 
-  const formClass = css`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background: #ffffff;
-    border: 1px solid #ddd;
-    padding: 2rem;
-    max-width: 400px;
+const formClass = css`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid #ddd;
+  padding: 2rem;
+  max-width: 400px;
+  width: 100%;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+`;
+
+const buttonClass = cx(
+  createButtonClass(blueColorSet),
+  css`
     width: 100%;
-    border-radius: 4px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  `;
+    margin-top: 1rem;
+    font-size: 1.2rem;
+  `
+);
 
-  const buttonClass = cx(
-    createButtonClass(blueColorSet),
-    css`
-      width: 100%;
-      margin-top: 1rem;
-      font-size: 1.2rem;
-    `
-  );
-
+const AuthForm = ({ isRegister, defaultUsername, errorMessages }: FormProps) => {
   return (
     <>
       <div className={formContainerClass}>
@@ -104,4 +105,53 @@ export const createLoginForm = (c: Context, options?: createOptions) => {
       title: 'ログイン',
     }
   );
+};
+
+interface ChangePasswordFormProps {
+  errorMessages?: string[];
+}
+
+const ChangePasswordForm: FC<ChangePasswordFormProps> = ({ errorMessages }) => {
+  return (
+    <>
+      <div className={formContainerClass}>
+        <form method="post" className={formClass}>
+          <PasswordInput
+            autocomplete="current-password"
+            name="oldPassword"
+            placeholder="old password"
+          />
+          <PasswordInput
+            autocomplete="new-password"
+            name="newPassword"
+            placeholder="new password"
+          />
+          <PasswordInput
+            autocomplete="new-password"
+            name="newPasswordConfirm"
+            placeholder="confirm new password"
+          />
+          <button class={buttonClass} type="submit">
+            パスワード変更
+          </button>
+          {errorMessages && (
+            <div class={errorTextClass}>
+              {errorMessages.map((message) => (
+                <p>{message}</p>
+              ))}
+            </div>
+          )}
+        </form>
+      </div>
+    </>
+  );
+};
+
+export const createChangePasswordForm = (
+  c: Context,
+  options?: ChangePasswordFormProps
+) => {
+  return c.render(<ChangePasswordForm {...options} />, {
+    title: 'パスワード変更',
+  });
 };
