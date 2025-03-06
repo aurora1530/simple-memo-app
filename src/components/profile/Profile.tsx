@@ -1,7 +1,7 @@
 import type { FC } from 'hono/jsx';
 import { css, cx, Style } from 'hono/css';
 import { createButtonClass } from '../common/style.js';
-import { blueColorSet } from '../common/color.js';
+import { blueColorSet, redColorSet } from '../common/color.js';
 
 interface ProfileProps {
   username: string;
@@ -30,23 +30,47 @@ const Profile: FC<ProfileProps> = ({ username }) => {
     margin-top: 10px;
   `;
 
-  const linkClass = cx(
+  const blueLinkClass = cx(
     createButtonClass(blueColorSet),
     css`
       text-align: center;
     `
   );
 
+  const redLinkClass = cx(
+    createButtonClass(redColorSet),
+    css`
+      text-align: center;
+    `
+  );
+
+  const hrClass = css`
+    border: none;
+    border-top: 1px solid #ccc;
+    margin: 10px 0;
+  `;
+
   return (
     <div className={containerClass}>
       <div className={nameClass}>{username}</div>
 
       <div className={linksClass}>
-        <a href="/auth/changePassword" class={linkClass}>
+        <a href="/auth/changePassword" class={blueLinkClass}>
           パスワード変更
         </a>
-        <a href="/memo" class={linkClass}>
+        <a
+          href="/auth/logout"
+          class={redLinkClass}
+          onclick={`if (!confirm('ログアウトしますか？')) event.preventDefault();`}
+        >
+          ログアウト
+        </a>
+        <hr class={hrClass} />
+        <a href="/memo" class={blueLinkClass}>
           メモ一覧
+        </a>
+        <a href="/memo/trash" class={redLinkClass}>
+          ゴミ箱
         </a>
       </div>
     </div>
