@@ -3,8 +3,10 @@ import Header from './components/common/Header.js';
 import { css, Style } from 'hono/css';
 import type { Env } from 'hono';
 import Footer from './components/common/Footer.js';
+import { createButtonClass } from './components/common/style.js';
+import { redColorSet } from './components/common/color.js';
 
-const rootRenderer = jsxRenderer(async ({ children, title }) => {
+const rootRenderer = jsxRenderer(async ({ children, title, modal }) => {
   const c = useRequestContext<Env>();
   const session = c.get('session')
   const serverMessage = session?.serverMessage;
@@ -26,6 +28,34 @@ const rootRenderer = jsxRenderer(async ({ children, title }) => {
     text-align: center;
     font-weight: bold;
   `;
+
+  const modalClass = css`
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; /* モーダルが画面より大きい場合にスクロール */
+    background-color: rgba(0, 0, 0, 0.5);
+  `;
+
+  const modalContentClass = css`
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 20px;
+    max-width: 500px;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    cursor: auto;
+  `;
+
+  const modalChildrenClass = css`
+    margin-bottom: 1rem;
+  `;
+
+  const closeButtonClass = createButtonClass(redColorSet);
 
   return (
     <html lang="ja">
@@ -59,7 +89,20 @@ const rootRenderer = jsxRenderer(async ({ children, title }) => {
         {serverMessage && <div class={messageContainerClass} id="server-message">{serverMessage}</div>}
         <main>{children}</main>
         <Footer />
+
+        {modal && (
+          <div id="modal" class={modalClass} onclick="closeModalOnBackground(event)">
+            <div class={modalContentClass} onclick="event.stopPropagation()">
+              <h2>{modal.title}</h2>
+              <div class={modalChildrenClass}>{modal.children}</div>
+              <button class={closeButtonClass} onclick="closeModal()">
+                閉じる
+              </button>
+            </div>
+          </div>
+        )}
         <script src="/public/common.js"></script>
+        {modal && <script src="/public/modal.js"></script>}
       </body>
     </html>
   );
