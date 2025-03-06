@@ -6,11 +6,13 @@ import { logger } from 'hono/logger'
 import { serveStatic } from '@hono/node-server/serve-static'
 import { secureHeaders } from 'hono/secure-headers'
 import rootRenderer from './renderer.js'
+import { compress } from 'hono/compress'
 
 const app = new Hono<Env>()
 
 app.use(logger());
 app.use('/public/*', serveStatic({ root: './' }));
+app.use(compress())
 app.use(secureHeaders());
 app.use(sessionMiddleware);
 app.use(rootRenderer);
