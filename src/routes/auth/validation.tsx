@@ -95,11 +95,11 @@ export const changePasswordValidator = zValidator(
       });
     }
 
-    const verifyNewPasswordIsDifferent = await verify(
+    const verifyNewPasswordIsDifferent = !(await verify(
       savedUser.passwordHash,
       result.data.newPassword
-    );
-    if (verifyNewPasswordIsDifferent) {
+    ));
+    if (!verifyNewPasswordIsDifferent) {
       // `oldPassword`が正しいことは確認済みなので、このエラーメッセージを表示しても問題ない。
       return createChangePasswordForm(c, {
         errorMessages: ['新しいパスワードは現在のパスワードと異なる必要があります'],
@@ -107,7 +107,7 @@ export const changePasswordValidator = zValidator(
     }
 
     if (!result.success) {
-      const errorMessages = result.error.errors.map((e) => e.message)
+      const errorMessages = result.error.errors.map((e) => e.message);
       return createChangePasswordForm(c, {
         errorMessages: Array.from(new Set(errorMessages)),
       });
