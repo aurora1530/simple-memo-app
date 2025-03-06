@@ -18,13 +18,15 @@ model User {
 }
 
 model Memo {
-  id        String   @id @default(uuid())
-  userId    Int
-  user      User     @relation(fields: [userId], references: [id])
-  title     String
-  body      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  deleted   Boolean  @default(false)
-  enableShare Boolean  @default(false)
+  id         String   @id @default(uuid())
+  userId     Int
+  user       User     @relation(fields: [userId], references: [id])
+  title      String
+  body       String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  deleted    Boolean  @default(false)
+  shareToken String?
+
+  @@index([shareToken], name: "shareToken")
 }
