@@ -131,6 +131,7 @@ const ChangePasswordForm: FC<ChangePasswordFormProps> = ({ errorMessages }) => {
             name="newPasswordConfirm"
             placeholder="confirm new password"
           />
+          <HintBox />
           <button class={buttonClass} type="submit">
             パスワード変更
           </button>
