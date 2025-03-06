@@ -62,6 +62,8 @@ const AuthForm = ({ isRegister, defaultUsername, errorMessages }: FormProps) => 
           />
           <PasswordInput
             autocomplete={isRegister ? 'new-password' : 'current-password'}
+            name="password"
+            placeholder="password"
           />
           {isRegister && <HintBox />}
           <button class={buttonClass} type="submit">
