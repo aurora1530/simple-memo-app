@@ -1,4 +1,4 @@
-import { type Env, Hono } from 'hono';
+import { Hono } from 'hono';
 import prisma from '../../prisma.js';
 import { argon2id, hash, verify } from 'argon2';
 import {
@@ -13,7 +13,7 @@ import {
 } from './validation.js';
 import { setLogoutToSession, type Session } from '../../session.js';
 
-const authApp = new Hono<Env>();
+const authApp = new Hono();
 
 authApp
   .get('/register', (c) => {

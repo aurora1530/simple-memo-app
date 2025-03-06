@@ -1,10 +1,9 @@
-import { type Env } from 'hono';
 import { css, Style } from 'hono/css';
 import type { FC } from 'hono/jsx';
 import { useRequestContext } from 'hono/jsx-renderer';
 
 const Header: FC = async () => {
-  const c = useRequestContext<Env>();
+  const c = useRequestContext();
   const session = c.get('session');
 
   return (

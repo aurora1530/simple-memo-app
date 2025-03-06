@@ -1,4 +1,4 @@
-import { type Env, Hono } from 'hono';
+import { Hono } from 'hono';
 import authApp from './auth/index.js';
 import memoApp from './memo/index.js';
 import { css } from 'hono/css';
@@ -6,7 +6,7 @@ import prisma from '../prisma.js';
 import profileApp from './profile/index.js';
 import shareApp from './share/index.js';
 
-const indexApp = new Hono<Env>();
+const indexApp = new Hono();
 
 indexApp.route('/auth', authApp);
 indexApp.route('/memo', memoApp);

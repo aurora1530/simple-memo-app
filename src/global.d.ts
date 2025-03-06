@@ -3,11 +3,8 @@ import type { Session } from './session.ts';
 import type { Modal } from './type.ts';
 
 declare module 'hono' {
-  interface Env {
-    Variables: {
-      session: Session;
-    };
-    Bindings: {};
+  interface ContextVariableMap {
+    session: Session;
   }
 
   interface ContextRenderer {
