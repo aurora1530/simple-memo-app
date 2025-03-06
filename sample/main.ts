@@ -124,7 +124,27 @@ const createUserAndMemos = async (user: User) => {
 
 const createUsersAndMemos = async () => {
   // serverの起動を待つ
-  await new Promise((resolve) => setTimeout(resolve, 5000));
+  await new Promise<void>((resolve) => {
+    let count = 0;
+    const interval = setInterval(async () => {
+      try {
+        const res = await fetch(`${url}/healthCheck`);
+        if (res.ok) {
+          clearInterval(interval);
+          resolve();
+        }
+      } catch (e) {
+        count++;
+
+        // 10回リトライしてダメだったら終了
+        if (count >= 10) {
+          console.error('Failed to connect to server');
+          clearInterval(interval);
+          process.exit(1);
+        }
+      }
+    }, 500);
+  });
 
   console.time('sample data creation');
   await Promise.all(users.map(createUserAndMemos));
