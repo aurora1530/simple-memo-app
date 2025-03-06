@@ -1,7 +1,7 @@
 import { css, Style } from 'hono/css';
 import { MAX_BODY_LENGTH, MAX_TITLE_LENGTH } from '../../routes/memo/constant.js';
 import BackButton from './BackButton.js';
-import { createButtonClass } from '../common/style.js';
+import { createButtonClass, errorTextClass } from '../common/style.js';
 import { blueColorSet } from '../common/color.js';
 
 interface MemoFormProps {
@@ -35,11 +35,6 @@ const MemoForm = ({
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   `;
 
-  // エラーメッセージ用スタイル
-  const errorClass = css`
-    color: #ff0000;
-    font-weight: bold;
-  `;
 
   const inputClass = css`
     box-sizing: border-box;
@@ -142,7 +137,7 @@ const MemoForm = ({
           <BackButton />
         </div>
         {errorMessages && (
-          <div class={errorClass}>
+          <div class={errorTextClass}>
             {errorMessages.map((message) => (
               <p>{message}</p>
             ))}

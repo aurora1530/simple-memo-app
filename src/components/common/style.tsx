@@ -20,3 +20,8 @@ export const createButtonClass = (createButtonClassProps: CreateButtonClassProps
     background-color: ${createButtonClassProps.hoverColor};
   }
 `;
+
+export const errorTextClass = css`
+  color: #ff0000;
+  font-weight: bold;
+`;
