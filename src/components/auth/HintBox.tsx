@@ -22,7 +22,7 @@ const HintBox: FC = () => {
   `;
   return (
     <div class={passwordHintBoxClass}>
-      <p>パスワードの要件:</p>
+      <span>パスワードの要件:</span>
       <ul class={passwordHintListClass}>
         <li>パスワードは{passwordMinLength}文字以上で入力してください</li>
         <li>半角英数字のみ使用可能です</li>
