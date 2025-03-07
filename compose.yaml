@@ -11,6 +11,8 @@ services:
       - type: volume
         source: app_node_modules
         target: /app/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true
     depends_on:
       - db
     env_file:
