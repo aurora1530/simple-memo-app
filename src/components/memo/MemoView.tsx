@@ -1,4 +1,4 @@
-import { css } from 'hono/css';
+import { css, cx } from 'hono/css';
 import type { Memo } from '@prisma/client';
 import { formatDate, TIMEZONE_OFFSET_JST } from '../../utils/date.js';
 import BackButton from './BackButton.js';
@@ -51,7 +51,15 @@ const MemoView = (props: MemoViewProps) => {
 
   const buttonClass = createButtonClass(blueColorSet);
 
-  const redButtonClass = createButtonClass(redColorSet);
+  const redButtonClass = cx(
+    createButtonClass(redColorSet),
+    css`
+      &:disabled {
+        background-color: #ccc;
+        color: #666;
+      }
+    `
+  );
 
   const bottomButtonContainerClass = css`
     margin-top: 1rem;
@@ -86,11 +94,13 @@ const MemoView = (props: MemoViewProps) => {
           </a>
           <>
             <ShareButton memoId={memo.id} alreadyShared={!!memo.shareToken} />
-            {props.enableShare && (
-              <button class={redButtonClass} onclick={`deleteShareLink("${memo.id}")`}>
-                共有を停止
-              </button>
-            )}
+            <button
+              class={redButtonClass}
+              onclick={`deleteShareLink("${memo.id}")`}
+              disabled={!memo.shareToken}
+            >
+              共有を停止
+            </button>
           </>
           <BackButton />
         </div>
