@@ -6,16 +6,19 @@ const Header: FC = async () => {
   const c = useRequestContext();
   const session = c.get('session');
 
+  const headerClass = css`
+    background-color: #f0f0f0;
+    padding: 20px;
+    border-bottom: 1px solid #ccc;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  `;
+
   return (
-    <header>
+    <header class={headerClass}>
       <Style>
         {css`
-          header {
-            background-color: #f0f0f0;
-            padding: 20px;
-            border-bottom: 1px solid #ccc;
-          }
-
           nav {
             display: flex;
             justify-content: space-between;
