@@ -108,6 +108,9 @@ const MemoList = async ({ memos, mode }: MemoListProps) => {
       border: 1px solid #c3e6cb;
       font-size: 0.9em;
       pointer-events: all;
+      &:hover {
+        background-color: ${greenColorSet.backgroundColor};
+      }
     `
   );
 
