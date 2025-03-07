@@ -22,6 +22,10 @@ type SessionData = {
 
 export type Session = IronSession<SessionData>;
 
+/**
+ * セッションを取得/新たに作成するMiddleware
+ * Contextに`session`という名前でセッションをセットする
+ */
 export const sessionMiddleware = createMiddleware(async (c, next) => {
   const session = await getIronSession<SessionData>(c.req.raw, c.res, {
     cookieName: 'session',
@@ -37,6 +41,9 @@ export const sessionMiddleware = createMiddleware(async (c, next) => {
   await next();
 });
 
+/**
+ * sessionオブジェクトにログアウト状態をセットする
+ */
 export const setLogoutToSession = async (session: Session) => {
   session.isLogin = false;
   delete session.user;
@@ -50,6 +57,10 @@ export type AuthenticatedEnv = {
   };
 };
 
+/**
+ * そのセッションがログイン中であることを保証するMiddleware
+ * もしログインしていない場合はログインページにリダイレクトする。
+ */
 export const ensureAuthenticatedMiddleware = createMiddleware(async (c, next) => {
   const session = c.get('session');
   if (!session.isLogin) {
