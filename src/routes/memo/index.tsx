@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import { ensureLoginedMiddleware, type LoginedEnv } from '../../session.js';
+import { ensureAuthenticatedMiddleware, type AuthenticatedEnv } from '../../session.js';
 import prisma from '../../prisma.js';
 import MemoList from '../../components/memo/MemoList.js';
 import MemoForm from '../../components/memo/MemoForm.js';
@@ -13,8 +13,8 @@ import { blueColorSet, redColorSet } from '../../components/common/color.js';
 import { createShareLink, createToken } from './token.js';
 import shareModal from '../../components/memo/ShareModal.js';
 
-const memoApp = new Hono<LoginedEnv>();
-memoApp.use(ensureLoginedMiddleware);
+const memoApp = new Hono<AuthenticatedEnv>();
+memoApp.use(ensureAuthenticatedMiddleware);
 
 const headingClass = css`
   text-align: center;

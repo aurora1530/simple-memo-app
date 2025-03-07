@@ -1,9 +1,9 @@
 import { Hono } from 'hono';
-import { ensureLoginedMiddleware, type LoginedEnv } from '../../session.js';
+import { ensureAuthenticatedMiddleware, type AuthenticatedEnv } from '../../session.js';
 import Profile from '../../components/profile/Profile.js';
 
-const profileApp = new Hono<LoginedEnv>();
-profileApp.use(ensureLoginedMiddleware);
+const profileApp = new Hono<AuthenticatedEnv>();
+profileApp.use(ensureAuthenticatedMiddleware);
 
 profileApp.get('/', (c) => {
   const session = c.get('session');

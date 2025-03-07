@@ -42,7 +42,7 @@ export const setLogoutToSession = async (session: Session) => {
   delete session.user;
 };
 
-export type LoginedEnv = {
+export type AuthenticatedEnv = {
   Variables: {
     session: Session & {
       isLogin: true;
@@ -50,7 +50,7 @@ export type LoginedEnv = {
   };
 };
 
-export const ensureLoginedMiddleware = createMiddleware(async (c, next) => {
+export const ensureAuthenticatedMiddleware = createMiddleware(async (c, next) => {
   const session = c.get('session');
   if (!session.isLogin) {
     session.serverMessage = 'ログインしてください';
