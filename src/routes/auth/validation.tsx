@@ -7,9 +7,9 @@ import {
 } from '../../components/auth/AuthForm.js';
 import { passwordMinLength } from './constant.js';
 import prisma from '../../prisma.js';
-import { verify } from 'argon2';
 import type { Context } from 'hono';
 import { setLogoutToSession, type AuthenticatedEnv } from '../../session.js';
+import { verifyPassword } from '../../lib/auth/password.js';
 
 const passwordSchema = z
   .string()
@@ -83,7 +83,7 @@ export const changePasswordValidator = zValidator(
       return c.redirect('/auth/login');
     }
 
-    const verifyOldPasswordIsCorrect = await verify(
+    const verifyOldPasswordIsCorrect = await verifyPassword(
       savedUser.passwordHash,
       result.data.oldPassword
     );
@@ -101,7 +101,7 @@ export const changePasswordValidator = zValidator(
       });
     }
 
-    const verifyNewPasswordIsDifferent = !(await verify(
+    const verifyNewPasswordIsDifferent = !(await verifyPassword(
       savedUser.passwordHash,
       result.data.newPassword
     ));

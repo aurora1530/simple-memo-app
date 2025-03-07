@@ -1,6 +1,5 @@
 import { Hono } from 'hono';
 import prisma from '../../prisma.js';
-import { argon2id, hash, verify } from 'argon2';
 import {
   createChangePasswordForm,
   createLoginForm,
@@ -16,6 +15,7 @@ import {
   ensureAuthenticatedMiddleware,
   setLogoutToSession,
 } from '../../session.js';
+import { generatePasswordHash, verifyPassword } from '../../lib/auth/password.js';
 
 const authApp = new Hono();
 
@@ -43,9 +43,7 @@ authApp
       });
     }
 
-    const hashedPassword = await hash(password, {
-      type: argon2id,
-    });
+    const hashedPassword = await generatePasswordHash(password);
 
     await prisma.user.create({
       data: {
@@ -82,7 +80,7 @@ authApp
       });
     }
 
-    const valid = await verify(user.passwordHash, password);
+    const valid = await verifyPassword(user.passwordHash, password);
 
     if (!valid) {
       return createLoginForm(c, {
@@ -121,9 +119,7 @@ const authenticatedAuthApp = new Hono<AuthenticatedEnv>()
     const { newPassword } = c.req.valid('form');
     const session = c.get('session');
 
-    const hashedPassword = await hash(newPassword, {
-      type: argon2id,
-    });
+    const hashedPassword = await generatePasswordHash(newPassword);
 
     await prisma.user.update({
       where: {
