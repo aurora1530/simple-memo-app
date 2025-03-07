@@ -5,12 +5,12 @@ import MemoList from '../../components/memo/MemoList.js';
 import MemoForm from '../../components/memo/MemoForm.js';
 import { memoValidation } from './validation.js';
 import { css, cx } from 'hono/css';
-import { sealMemoTitleAndBody, unsealMemoTitleAndBody, unsealMemoList } from './seal.js';
+import { sealMemoTitleAndBody, unsealMemoTitleAndBody, unsealMemoList } from '../../lib/memo/seal.js';
 import { MAX_MEMO_COUNT } from './constant.js';
 import MemoView from '../../components/memo/MemoView.js';
 import { createButtonClass } from '../../components/common/style.js';
 import { blueColorSet, redColorSet } from '../../components/common/color.js';
-import { createShareLink, createToken } from './token.js';
+import { createShareLink, createToken } from '../../lib/memo/token.js';
 import shareModal from '../../components/memo/ShareModal.js';
 
 const memoApp = new Hono<AuthenticatedEnv>();

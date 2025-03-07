@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 import prisma from '../../prisma.js';
 import MemoView from '../../components/memo/MemoView.js';
-import { unsealMemoList } from '../memo/seal.js';
+import { unsealMemoList } from '../../lib/memo/seal.js';
 
 const shareApp = new Hono();
 
