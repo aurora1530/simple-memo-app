@@ -3,6 +3,7 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/index.ts",
+    "build": "tsc",
     "db:sample": "tsx sample/main.ts",
     "db:dev-init": "prisma migrate reset && run-p dev db:sample"
   },
@@ -21,6 +22,7 @@
     "@types/node": "^20.11.17",
     "npm-run-all": "^4.1.5",
     "prisma": "^6.4.1",
-    "tsx": "^4.7.1"
+    "tsx": "^4.7.1",
+    "typescript": "^5.8.2"
   }
 }
