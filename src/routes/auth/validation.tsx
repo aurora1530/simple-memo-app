@@ -9,7 +9,7 @@ import { passwordMinLength } from './constant.js';
 import prisma from '../../prisma.js';
 import { verify } from 'argon2';
 import type { Context } from 'hono';
-import type { AuthenticatedEnv } from '../../session.js';
+import { setLogoutToSession, type AuthenticatedEnv } from '../../session.js';
 
 const passwordSchema = z
   .string()
@@ -77,6 +77,9 @@ export const changePasswordValidator = zValidator(
     });
 
     if (!savedUser) {
+      setLogoutToSession(session);
+      session.serverMessage = 'セッション状態が不正です。ログインし直してください。';
+      await session.save();
       return c.redirect('/auth/login');
     }
 
