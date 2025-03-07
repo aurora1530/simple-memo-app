@@ -111,6 +111,15 @@ const MemoList = async ({ memos, mode }: MemoListProps) => {
     `
   );
 
+  const sharingButtonClass = cx(
+    restoreButtonClass,
+    css`
+      &:hover {
+        background-color: ${greenColorSet.backgroundColor};
+      }
+    `
+  );
+
   const noMemoMessageClass = css`
     text-align: center;
     color: #666;
@@ -164,7 +173,7 @@ const MemoList = async ({ memos, mode }: MemoListProps) => {
                   <a class={editButtonClass} href={`/memo/edit/${memo.id}`}>
                     編集
                   </a>
-                  {alreadyShared && <span class={restoreButtonClass}>共有中</span>}
+                  {alreadyShared && <span class={sharingButtonClass}>共有中</span>}
                   <button
                     class={deleteButtonClass}
                     onclick={`deleteMemo("${memo.id}");event.stopPropagation();`}
