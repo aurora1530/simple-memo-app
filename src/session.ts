@@ -42,7 +42,8 @@ export const sessionMiddleware = createMiddleware(async (c, next) => {
 });
 
 /**
- * sessionオブジェクトにログアウト状態をセットする
+ * sessionオブジェクトにログアウト状態をセットする。
+ * session.save()はこの関数内では行わない。
  */
 export const setLogoutToSession = async (session: Session) => {
   session.isLogin = false;
