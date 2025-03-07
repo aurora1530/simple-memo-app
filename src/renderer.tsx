@@ -68,12 +68,6 @@ const rootRenderer = jsxRenderer(async ({ children, title, modal }) => {
             body {
               margin: 0;
               padding: 0;
-              height: 100%;
-            }
-
-            body {
-              display: flex;
-              flex-direction: column;
             }
 
             main {
