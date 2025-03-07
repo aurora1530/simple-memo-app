@@ -75,7 +75,7 @@ indexApp.get('/', (c) => {
       </div>
     </>,
     {
-      title: 'Home',
+      title: 'Simple Memo App',
     }
   );
 });

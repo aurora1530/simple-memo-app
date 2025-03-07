@@ -67,13 +67,13 @@ memoApp
         <MemoList memos={unsealedMemoList} mode="list" />
       </>,
       {
-        title: 'Memo',
+        title: 'メモ',
       }
     );
   })
   .get('/create', (c) => {
     return c.render(<MemoForm submitLabel="新規作成" />, {
-      title: 'Create Memo',
+      title: '新規作成',
     });
   })
   .post('/create', memoValidation('create'), async (c) => {
@@ -94,7 +94,7 @@ memoApp
           errorMessages={[`メモは${MAX_MEMO_COUNT}個までしか作成できません`]}
         />,
         {
-          title: 'Create Memo',
+          title: '新規作成',
         }
       );
     }
@@ -140,7 +140,7 @@ memoApp
         defaultBody={unsealedMemo.body}
       />,
       {
-        title: 'Edit Memo',
+        title: 'メモの更新',
       }
     );
   })
@@ -180,7 +180,7 @@ memoApp
           errorMessages={['変更がありません']}
         />,
         {
-          title: 'Edit Memo',
+          title: 'メモの更新',
         }
       );
     }
@@ -251,7 +251,7 @@ memoApp
         <MemoList memos={unsealedMemoList} mode="trash" />
       </>,
       {
-        title: 'Memo Trash',
+        title: 'ゴミ箱',
       }
     );
   })
@@ -300,7 +300,7 @@ memoApp
         enableShare={!!memo.shareToken}
       />,
       {
-        title: 'View Memo',
+        title: 'メモの表示',
         modal: shareModal,
       }
     );

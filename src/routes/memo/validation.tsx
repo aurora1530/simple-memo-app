@@ -32,7 +32,7 @@ export const memoValidation = (type: 'create' | 'edit') =>
             errorMessages={errorMessages}
           />,
           {
-            title: type === 'create' ? 'Create Memo' : 'Edit Memo',
+            title: type === 'create' ? 'Create Memo' : 'メモの更新',
           }
         );
       }

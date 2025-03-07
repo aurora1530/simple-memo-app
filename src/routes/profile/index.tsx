@@ -9,7 +9,7 @@ profileApp.get('/', (c) => {
   const session = c.get('session');
 
   return c.render(<Profile username={session.user.name} />, {
-    title: 'Profile',
+    title: 'プロフィール',
   });
 });
 

@@ -162,14 +162,14 @@ const MemoList = async ({ memos, mode }: MemoListProps) => {
                 // 一覧表示の場合
                 <>
                   <a class={editButtonClass} href={`/memo/edit/${memo.id}`}>
-                    Edit
+                    編集
                   </a>
                   {alreadyShared && <span class={restoreButtonClass}>共有中</span>}
                   <button
                     class={deleteButtonClass}
                     onclick={`deleteMemo("${memo.id}");event.stopPropagation();`}
                   >
-                    Delete
+                    削除
                   </button>
                 </>
               ) : (
@@ -179,13 +179,13 @@ const MemoList = async ({ memos, mode }: MemoListProps) => {
                     class={restoreButtonClass}
                     onclick={`restoreMemo("${memo.id}");event.stopPropagation();`}
                   >
-                    Restore
+                    復元
                   </button>
                   <button
                     class={deleteButtonClass}
                     onclick={`deleteCompletelyMemo("${memo.id}");event.stopPropagation();`}
                   >
-                    Delete completely
+                    完全に削除
                   </button>
                 </>
               )}

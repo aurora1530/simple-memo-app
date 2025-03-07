@@ -35,7 +35,7 @@ shareApp.get('/view/:token', async (c) => {
   return c.render(
     <MemoView memo={unsealedMemo[0]} isShareView={true} username={user.username} />,
     {
-      title: 'View Memo',
+      title: 'メモの表示',
     }
   );
 });

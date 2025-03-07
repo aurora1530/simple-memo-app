@@ -82,13 +82,13 @@ const MemoView = (props: MemoViewProps) => {
       {!isShareView && (
         <div class={bottomButtonContainerClass}>
           <a className={buttonClass} href={`/memo/edit/${memo.id}`}>
-            Edit
+            編集
           </a>
           <>
             <ShareButton memoId={memo.id} alreadyShared={!!memo.shareToken} />
             {props.enableShare && (
               <button class={redButtonClass} onclick={`deleteShareLink("${memo.id}")`}>
-                Stop sharing
+                共有を停止
               </button>
             )}
           </>
