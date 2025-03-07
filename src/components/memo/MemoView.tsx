@@ -61,6 +61,13 @@ const MemoView = (props: MemoViewProps) => {
     `
   );
 
+  const retButtonWithNormalCursor = cx(
+    redButtonClass,
+    css`
+      cursor: default;
+    `
+  );
+
   const bottomButtonContainerClass = css`
     margin-top: 1rem;
     display: flex;
@@ -95,7 +102,7 @@ const MemoView = (props: MemoViewProps) => {
           <>
             <ShareButton memoId={memo.id} alreadyShared={!!memo.shareToken} />
             <button
-              class={redButtonClass}
+              class={memo.shareToken ? redButtonClass : retButtonWithNormalCursor}
               onclick={`deleteShareLink("${memo.id}")`}
               disabled={!memo.shareToken}
             >
