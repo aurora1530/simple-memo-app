@@ -5,7 +5,7 @@ import {
   createLoginForm,
   createRegisterForm,
 } from '../../components/auth/AuthForm.js';
-import { passwordMinLength } from './constant.js';
+import { passwordMinLength, USERNAME_MAX_LENGTH } from './constant.js';
 import prisma from '../../prisma.js';
 import type { Context } from 'hono';
 import { setLogoutToSession, type AuthenticatedEnv } from '../../session.js';
@@ -19,7 +19,13 @@ const passwordSchema = z
     'パスワードは英字の大文字・小文字、そして数字をそれぞれ1文字以上含む必要があります'
   );
 
-const usernameSchema = z.string().min(1, 'ユーザー名を入力してください');
+const usernameSchema = z
+  .string()
+  .min(1, 'ユーザー名を入力してください')
+  .max(
+    USERNAME_MAX_LENGTH,
+    `ユーザー名は${USERNAME_MAX_LENGTH}文字以下で入力してください`
+  );
 
 export const registerValidator = zValidator(
   'form',
