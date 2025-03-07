@@ -11,7 +11,11 @@ import {
   loginValidator,
   registerValidator,
 } from './validation.js';
-import { setLogoutToSession, type Session } from '../../session.js';
+import {
+  type AuthenticatedEnv,
+  ensureAuthenticatedMiddleware,
+  setLogoutToSession,
+} from '../../session.js';
 
 const authApp = new Hono();
 
@@ -106,18 +110,16 @@ authApp
     await session.save();
 
     return c.redirect('/');
-  })
-  .get('/changePassword', (c) => {
-    const session = c.get('session');
-    if (!session.isLogin) {
-      return c.redirect('/auth/login');
-    }
+  });
 
+const authenticatedAuthApp = new Hono<AuthenticatedEnv>()
+  .use(ensureAuthenticatedMiddleware)
+  .get('/changePassword', (c) => {
     return createChangePasswordForm(c);
   })
   .post('/changePassword', changePasswordValidator, async (c) => {
     const { newPassword } = c.req.valid('form');
-    const session = c.get('session') as Session & { isLogin: true }; // Validatorで確認済み
+    const session = c.get('session');
 
     const hashedPassword = await hash(newPassword, {
       type: argon2id,
@@ -138,5 +140,7 @@ authApp
 
     return c.redirect('/auth/login');
   });
+
+authApp.route('/', authenticatedAuthApp);
 
 export default authApp;

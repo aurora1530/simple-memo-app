@@ -8,6 +8,8 @@ import {
 import { passwordMinLength } from './constant.js';
 import prisma from '../../prisma.js';
 import { verify } from 'argon2';
+import type { Context } from 'hono';
+import type { AuthenticatedEnv } from '../../session.js';
 
 const passwordSchema = z
   .string()
@@ -53,6 +55,10 @@ export const loginValidator = zValidator(
   }
 );
 
+/**
+ * パスワード変更フォームのバリデーション
+ * ログイン済みであることは事前に保証する必要がある
+ */
 export const changePasswordValidator = zValidator(
   'form',
   z.object({
@@ -60,11 +66,8 @@ export const changePasswordValidator = zValidator(
     newPassword: passwordSchema,
     newPasswordConfirm: passwordSchema,
   }),
-  async (result, c) => {
+  async (result, c: Context<AuthenticatedEnv>) => {
     const session = c.get('session');
-    if (!session.isLogin) {
-      return c.redirect('/auth/login');
-    }
 
     const userID = session.user.id;
     const savedUser = await prisma.user.findUnique({
