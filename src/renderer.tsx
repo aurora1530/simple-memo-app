@@ -84,11 +84,11 @@ const rootRenderer = jsxRenderer(async ({ children, title, modal }) => {
         <Footer />
 
         {modal && (
-          <div id="modal" class={modalClass} onclick="closeModalOnBackground(event)">
+          <div id="modal" class={modalClass} onclick="closeModalOnBackground(event, true)">
             <div class={modalContentClass} onclick="event.stopPropagation()">
               <h2>{modal.title}</h2>
               <div class={modalChildrenClass}>{modal.children}</div>
-              <button class={closeButtonClass} onclick="closeModal()">
+              <button class={closeButtonClass} onclick="closeModal(true)">
                 閉じる
               </button>
             </div>
