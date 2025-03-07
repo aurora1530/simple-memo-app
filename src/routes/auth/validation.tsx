@@ -5,7 +5,7 @@ import {
   createLoginForm,
   createRegisterForm,
 } from '../../components/auth/AuthForm.js';
-import { passwordMinLength, USERNAME_MAX_LENGTH } from './constant.js';
+import { PASSWORD_MIN_LENGTH, USERNAME_MAX_LENGTH } from './constant.js';
 import prisma from '../../prisma.js';
 import type { Context } from 'hono';
 import { setLogoutToSession, type AuthenticatedEnv } from '../../session.js';
@@ -13,7 +13,7 @@ import { verifyPassword } from '../../lib/auth/password.js';
 
 const passwordSchema = z
   .string()
-  .min(passwordMinLength, 'パスワードは8文字以上で入力してください')
+  .min(PASSWORD_MIN_LENGTH, 'パスワードは8文字以上で入力してください')
   .regex(
     /^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?\d)[a-zA-Z\d]+$/,
     'パスワードは英字の大文字・小文字、そして数字をそれぞれ1文字以上含む必要があります'

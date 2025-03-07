@@ -1,6 +1,6 @@
 import { css } from 'hono/css';
 import type { FC } from 'hono/jsx';
-import { passwordMinLength } from '../../routes/auth/constant.js';
+import { PASSWORD_MIN_LENGTH } from '../../routes/auth/constant.js';
 
 const HintBox: FC = () => {
   const passwordHintBoxClass = css`
@@ -24,7 +24,7 @@ const HintBox: FC = () => {
     <div class={passwordHintBoxClass}>
       <span>パスワードの要件:</span>
       <ul class={passwordHintListClass}>
-        <li>パスワードは{passwordMinLength}文字以上で入力してください</li>
+        <li>パスワードは{PASSWORD_MIN_LENGTH}文字以上で入力してください</li>
         <li>半角英数字のみ使用可能です</li>
         <li>英語の大文字・小文字、数字をそれぞれ1文字以上含めてください</li>
       </ul>

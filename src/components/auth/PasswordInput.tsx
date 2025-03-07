@@ -1,5 +1,5 @@
 import type { FC } from 'hono/jsx';
-import { passwordMinLength } from '../../routes/auth/constant.js';
+import { PASSWORD_MIN_LENGTH } from '../../routes/auth/constant.js';
 import { inputClass } from './style.js';
 
 interface PasswordInputProps {
@@ -17,7 +17,7 @@ const PasswordInput: FC<PasswordInputProps> = ({ autocomplete, name, placeholder
       id={name}
       placeholder={placeholder}
       autocomplete={autocomplete}
-      minlength={passwordMinLength}
+      minlength={PASSWORD_MIN_LENGTH}
       required
     />
   );
