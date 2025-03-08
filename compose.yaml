@@ -21,6 +21,8 @@ services:
       - simple_memo_app_network
   db:
     image: postgres:17
+    ports:
+      - "5432:5432"
     hostname: db
     env_file:
       - ./.env
