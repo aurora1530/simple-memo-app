@@ -7,6 +7,7 @@ import { serveStatic } from '@hono/node-server/serve-static'
 import { secureHeaders } from 'hono/secure-headers'
 import rootRenderer from './renderer.js'
 import { compress } from 'hono/compress'
+import { ORIGIN, PORT } from './constant.js'
 
 const app = new Hono()
 
@@ -35,7 +36,7 @@ app
 
 serve({
   fetch: app.fetch,
-  port: 3000
+  port: PORT,
 }, (info) => {
-  console.log(`Server is running on http://localhost:${info.port}`)
+  console.log(`Server is running on ${ORIGIN}:${info.port}`)
 })
