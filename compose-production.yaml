@@ -1,0 +1,12 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.production
+    environment:
+      - DATABASE_URL=${DATABASE_URL:?DATABASE_URL must be set}
+    env_file:
+      - ./.env.production
+  db:
+    env_file:
+      - ./.env.production

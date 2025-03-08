@@ -1,22 +1,14 @@
 services:
   app:
-    build: .
-    tty: true
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - "3000:3000"
-    volumes:
-      - type: bind
-        source: ./
-        target: /app
-      - type: volume
-        source: app_node_modules
-        target: /app/node_modules
     environment:
       - CHOKIDAR_USEPOLLING={$CHOKIDAR_USEPOLLING:-true}
     depends_on:
       - db
-    env_file:
-      - ./.env
     networks:
       - simple_memo_app_network
   db:
@@ -24,8 +16,6 @@ services:
     ports:
       - "5432:5432"
     hostname: db
-    env_file:
-      - ./.env
     networks:
       - simple_memo_app_network
     environment:

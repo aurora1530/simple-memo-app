@@ -1,0 +1,17 @@
+services:
+  app:
+    tty: true
+    volumes:
+      - type: bind
+        source: ./
+        target: /app
+      - type: volume
+        source: app_node_modules
+        target: /app/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING={$CHOKIDAR_USEPOLLING:-true}
+    env_file:
+      - ./.env
+  db:
+    env_file:
+      - ./.env
