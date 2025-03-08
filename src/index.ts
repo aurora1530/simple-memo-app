@@ -37,6 +37,6 @@ app
 serve({
   fetch: app.fetch,
   port: PORT,
-}, (info) => {
-  console.log(`Server is running on ${ORIGIN}:${info.port}`)
+}, () => {
+  console.log(`Server is running on ${ORIGIN}`)
 })
