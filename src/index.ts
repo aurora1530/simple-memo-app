@@ -8,13 +8,19 @@ import { secureHeaders } from 'hono/secure-headers'
 import rootRenderer from './renderer.js'
 import { compress } from 'hono/compress'
 import { ORIGIN, PORT } from './constant.js'
+import { csrf } from 'hono/csrf'
 
 const app = new Hono()
 
 app.use(logger());
 app.use('/public/*', serveStatic({ root: './' }));
 app.use(compress())
-app.use(secureHeaders());
+app.use(
+  secureHeaders({
+    referrerPolicy: 'strict-origin-when-cross-origin',
+  })
+);
+app.use(csrf({ origin: ORIGIN }));
 app.use(sessionMiddleware);
 app.use(rootRenderer);
 app.route('/', indexApp);
