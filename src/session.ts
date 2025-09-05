@@ -30,6 +30,12 @@ export const sessionMiddleware = createMiddleware(async (c, next) => {
   const session = await getIronSession<SessionData>(c.req.raw, c.res, {
     cookieName: 'session',
     password: env<{ SESSION_PASSWORD: string }>(c).SESSION_PASSWORD,
+    cookieOptions: {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production',
+      path: '/',
+    },
   });
 
   // 初期化。isLoginがUndefinedの場合が最初はあるので、falseにする
