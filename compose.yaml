@@ -6,7 +6,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - CHOKIDAR_USEPOLLING={$CHOKIDAR_USEPOLLING:-true}
+      - CHOKIDAR_USEPOLLING=${CHOKIDAR_USEPOLLING:-true}
     depends_on:
       - db
     networks:
