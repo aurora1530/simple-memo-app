@@ -5,7 +5,8 @@
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
     "db:sample": "tsx sample/main.ts",
-    "db:dev-init": "prisma migrate reset && run-p dev db:sample"
+    "db:dev-init": "prisma migrate reset && run-p dev db:sample",
+    "test": "node --test --import tsx \"test/**/*.test.ts\""
   },
   "dependencies": {
     "@hono/node-server": "^1.13.8",
