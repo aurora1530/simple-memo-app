@@ -30,6 +30,7 @@ const createUser = async (user: User): Promise<string | undefined> => {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
+      Origin: url,
     },
     body: formData,
     credentials: 'include',
@@ -52,6 +53,7 @@ const loginUser = async (
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
       Cookie: sessionCookie,
+      Origin: url,
     },
     credentials: 'include',
     redirect: 'manual',
@@ -70,6 +72,7 @@ const createMemo = async (memo: Memo, cookie: string): Promise<boolean> => {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
       Cookie: cookie,
+      Origin: url,
     },
     credentials: 'include',
     redirect: 'manual',
