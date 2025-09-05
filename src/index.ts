@@ -20,6 +20,22 @@ app.use(
     referrerPolicy: 'strict-origin-when-cross-origin',
   })
 );
+// Additional CSP
+app.use(async (c, next) => {
+  c.header(
+    'Content-Security-Policy',
+    [
+      "default-src 'self'",
+      "script-src 'self' 'unsafe-inline'",
+      "style-src 'self' 'unsafe-inline'",
+      "img-src 'self' data:",
+      "object-src 'none'",
+      "base-uri 'self'",
+      "frame-ancestors 'none'",
+    ].join('; ')
+  );
+  await next();
+});
 app.use(csrf({ origin: ORIGIN }));
 app.use(sessionMiddleware);
 app.use(rootRenderer);
