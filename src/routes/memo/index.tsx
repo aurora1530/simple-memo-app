@@ -19,7 +19,8 @@ import {
   grayColorSet,
 } from '../../components/common/color.js';
 import { createShareLink, createToken } from '../../lib/memo/token.js';
-import shareModal from '../../components/memo/ShareModal.js';
+import { t } from '../../i18n/index.js';
+import createShareModal from '../../components/memo/ShareModal.js';
 
 const memoApp = new Hono<AuthenticatedEnv>();
 memoApp.use(ensureAuthenticatedMiddleware);
@@ -112,11 +113,13 @@ const getPageNumbers = (current: number, total: number) => {
 const buildUrl = (base: string, page: number, perPage: number) =>
   `${base}?page=${page}&perPage=${perPage}`;
 
+type PagerLabels = { first: string; prev: string; next: string; last: string };
 const renderPagination = (
   basePath: string,
   page: number,
   perPage: number,
-  totalPages: number
+  totalPages: number,
+  labels: PagerLabels
 ) => {
   const prevDisabled = page <= 1;
   const nextDisabled = page >= totalPages;
@@ -125,23 +128,13 @@ const renderPagination = (
     <nav class={paginationContainerClass} aria-label="pagination">
       <ul class={paginationListClass}>
         <li>
-          <a
-            class={prevDisabled ? pageDisabledClass : pageLinkClass}
-            href={buildUrl(basePath, 1, perPage)}
-            aria-disabled={prevDisabled}
-            tabindex={prevDisabled ? -1 : 0}
-          >
-            « 最初
+          <a class={prevDisabled ? pageDisabledClass : pageLinkClass} href={buildUrl(basePath, 1, perPage)}>
+            « {labels.first}
           </a>
         </li>
         <li>
-          <a
-            class={prevDisabled ? pageDisabledClass : pageLinkClass}
-            href={buildUrl(basePath, Math.max(1, page - 1), perPage)}
-            aria-disabled={prevDisabled}
-            tabindex={prevDisabled ? -1 : 0}
-          >
-            ‹ 前
+          <a class={prevDisabled ? pageDisabledClass : pageLinkClass} href={buildUrl(basePath, Math.max(1, page - 1), perPage)}>
+            ‹ {labels.prev}
           </a>
         </li>
         {numbers.map((p) => (
@@ -164,23 +157,13 @@ const renderPagination = (
           </li>
         ))}
         <li>
-          <a
-            class={nextDisabled ? pageDisabledClass : pageLinkClass}
-            href={buildUrl(basePath, Math.min(totalPages, page + 1), perPage)}
-            aria-disabled={nextDisabled}
-            tabindex={nextDisabled ? -1 : 0}
-          >
-            次 ›
+          <a class={nextDisabled ? pageDisabledClass : pageLinkClass} href={buildUrl(basePath, Math.min(totalPages, page + 1), perPage)}>
+            {labels.next} ›
           </a>
         </li>
         <li>
-          <a
-            class={nextDisabled ? pageDisabledClass : pageLinkClass}
-            href={buildUrl(basePath, totalPages, perPage)}
-            aria-disabled={nextDisabled}
-            tabindex={nextDisabled ? -1 : 0}
-          >
-            最後 »
+          <a class={nextDisabled ? pageDisabledClass : pageLinkClass} href={buildUrl(basePath, totalPages, perPage)}>
+            {labels.last} »
           </a>
         </li>
       </ul>
@@ -224,31 +207,32 @@ memoApp
     const totalPages = Math.max(1, Math.ceil(totalCount / perPage));
     const clampedPage = Math.min(page, totalPages);
 
-    const pagination = renderPagination('/memo', clampedPage, perPage, totalPages);
-
+    const labels = {
+      first: t(c, 'pager.first'),
+      prev: t(c, 'pager.prev'),
+      next: t(c, 'pager.next'),
+      last: t(c, 'pager.last'),
+    };
+    const pagination = renderPagination('/memo', clampedPage, perPage, totalPages, labels);
     return c.render(
       <>
-        <h1 class={headingClass}>Memo</h1>
+        <h1 class={headingClass}>{t(c, 'memo.heading')}</h1>
         <div class={topContainerClass}>
-          <a href="/memo/create" class={createMemoButtonClass}>
-            メモを作成
-          </a>
-          <a href="/memo/trash" class={trashMemoButtonClass}>
-            ゴミ箱
-          </a>
+          <a href="/memo/create" class={createMemoButtonClass}>{t(c, 'nav.createMemo')}</a>
+          <a href="/memo/trash" class={trashMemoButtonClass}>{t(c, 'nav.trash')}</a>
           {pagination}
         </div>
         <MemoList memos={unsealedMemoList} mode="list" />
         {pagination}
       </>,
       {
-        title: 'メモ',
+        title: t(c, 'memo.heading'),
       }
     );
   })
   .get('/create', (c) => {
-    return c.render(<MemoForm submitLabel="新規作成" />, {
-      title: '新規作成',
+    return c.render(<MemoForm submitLabel={t(c,'memo.create.title')} />, {
+      title: t(c,'memo.create.title'),
     });
   })
   .post('/create', memoValidation('create'), async (c) => {
@@ -263,13 +247,13 @@ memoApp
     if (currentMemoCount >= MAX_MEMO_COUNT) {
       return c.render(
         <MemoForm
-          submitLabel="新規作成"
+          submitLabel={t(c,'memo.create.title')}
           defaultTitle={title}
           defaultBody={body}
-          errorMessages={[`メモは${MAX_MEMO_COUNT}個までしか作成できません`]}
+          errorMessages={[t(c,'memo.limit.exceeded',{ max: MAX_MEMO_COUNT })]}
         />,
         {
-          title: '新規作成',
+          title: t(c,'memo.create.title'),
         }
       );
     }
@@ -285,7 +269,7 @@ memoApp
       },
     });
 
-    session.serverMessage = 'メモを作成しました';
+    session.serverMessage = t(c,'memo.created');
     await session.save();
 
     return c.redirect('/memo');
@@ -310,12 +294,12 @@ memoApp
 
     return c.render(
       <MemoForm
-        submitLabel="更新"
+        submitLabel={t(c,'memo.update.title')}
         defaultTitle={unsealedMemo.title}
         defaultBody={unsealedMemo.body}
       />,
       {
-        title: 'メモの更新',
+        title: t(c,'memo.update.title'),
       }
     );
   })
@@ -349,13 +333,13 @@ memoApp
     if (notChanged) {
       return c.render(
         <MemoForm
-          submitLabel="更新"
+          submitLabel={t(c,'memo.update.title')}
           defaultTitle={newTitle}
           defaultBody={newBody}
-          errorMessages={['変更がありません']}
+          errorMessages={[t(c,'memo.nochange')]}
         />,
         {
-          title: 'メモの更新',
+          title: t(c,'memo.update.title'),
         }
       );
     }
@@ -372,7 +356,7 @@ memoApp
       },
     });
 
-    session.serverMessage = 'メモを更新しました';
+    session.serverMessage = t(c,'memo.updated');
     await session.save();
 
     return c.redirect('/memo');
@@ -392,7 +376,7 @@ memoApp
       },
     });
 
-    session.serverMessage = 'メモを削除しました';
+    session.serverMessage = t(c,'memo.deleted');
     await session.save();
 
     return c.json({});
@@ -432,25 +416,26 @@ memoApp
     const totalPages = Math.max(1, Math.ceil(totalCount / perPage));
     const clampedPage = Math.min(page, totalPages);
 
-    const pagination = renderPagination('/memo/trash', clampedPage, perPage, totalPages);
-
+    const labels = {
+      first: t(c, 'pager.first'),
+      prev: t(c, 'pager.prev'),
+      next: t(c, 'pager.next'),
+      last: t(c, 'pager.last'),
+    };
+    const pagination = renderPagination('/memo/trash', clampedPage, perPage, totalPages, labels);
     return c.render(
       <>
-        <h1 class={headingClass}>ゴミ箱</h1>
+        <h1 class={headingClass}>{t(c, 'trash.heading')}</h1>
         <div class={topContainerClass}>
-          <a href="/memo/create" class={createMemoButtonClass}>
-            メモを作成
-          </a>
-          <a href="/memo" class={createMemoButtonClass}>
-            メモ一覧
-          </a>
+          <a href="/memo/create" class={createMemoButtonClass}>{t(c, 'nav.createMemo')}</a>
+          <a href="/memo" class={createMemoButtonClass}>{t(c, 'nav.memoList')}</a>
           {pagination}
         </div>
         <MemoList memos={unsealedMemoList} mode="trash" />
         {pagination}
       </>,
       {
-        title: 'ゴミ箱',
+        title: t(c, 'trash.heading'),
       }
     );
   })
@@ -468,7 +453,7 @@ memoApp
       },
     });
 
-    session.serverMessage = 'メモを復元しました';
+    session.serverMessage = t(c,'memo.restored');
     await session.save();
 
     return c.json({});
@@ -499,8 +484,8 @@ memoApp
         enableShare={!!memo.shareToken}
       />,
       {
-        title: 'メモの表示',
-        modal: shareModal,
+        title: t(c,'memo.show.title'),
+        modal: createShareModal(c),
       }
     );
   })
@@ -526,7 +511,7 @@ memoApp
       },
     });
 
-    session.serverMessage = 'メモを完全に削除しました';
+    session.serverMessage = t(c,'memo.deletedCompletely');
     await session.save();
 
     return c.json({});

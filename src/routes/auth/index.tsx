@@ -16,6 +16,7 @@ import {
   setLogoutToSession,
 } from '../../session.js';
 import { generatePasswordHash, verifyPassword } from '../../lib/auth/password.js';
+import { t } from '../../i18n/index.js';
 
 const authApp = new Hono();
 
@@ -39,7 +40,7 @@ authApp
 
     if (userExists) {
       return createRegisterForm(c, {
-        errorMessages: [`${username}は既に登録されています`],
+        errorMessages: [t(c, 'auth.username.exists', { username })],
       });
     }
 
@@ -53,7 +54,7 @@ authApp
     });
 
     const session = c.get('session');
-    session.serverMessage = `${username}の登録が完了しました`;
+    session.serverMessage = t(c, 'auth.registered', { username });
     await session.save();
     return c.redirect('/auth/login');
   })
@@ -76,7 +77,7 @@ authApp
 
     if (!user) {
       return createLoginForm(c, {
-        errorMessages: ['ユーザー名またはパスワードが違います'],
+        errorMessages: [t(c, 'auth.badCredentials')],
       });
     }
 
@@ -84,7 +85,7 @@ authApp
 
     if (!valid) {
       return createLoginForm(c, {
-        errorMessages: ['ユーザー名またはパスワードが違います'],
+        errorMessages: [t(c, 'auth.badCredentials')],
       });
     }
 
@@ -94,7 +95,7 @@ authApp
       id: user.id,
       name: user.username,
     };
-    session.serverMessage = 'ログインしました';
+    session.serverMessage = t(c, 'auth.loggedIn');
 
     await session.save();
 
@@ -104,7 +105,7 @@ authApp
     const session = c.get('session');
     setLogoutToSession(session);
 
-    session.serverMessage = 'ログアウトしました';
+    session.serverMessage = t(c, 'auth.loggedOut');
     await session.save();
 
     return c.redirect('/');
@@ -130,7 +131,7 @@ const authenticatedAuthApp = new Hono<AuthenticatedEnv>()
       },
     });
 
-    session.serverMessage = 'パスワードを変更しました。ログインし直してください。';
+    session.serverMessage = t(c, 'auth.password.changed.relogin');
     setLogoutToSession(session);
     await session.save();
 

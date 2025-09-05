@@ -1,6 +1,7 @@
 import { env } from 'hono/adapter';
 import { createMiddleware } from 'hono/factory';
 import { getIronSession, type IronSession } from 'iron-session';
+import { t } from './i18n/index.js';
 
 type UserData = {
   id: number;
@@ -71,7 +72,7 @@ export type AuthenticatedEnv = {
 export const ensureAuthenticatedMiddleware = createMiddleware(async (c, next) => {
   const session = c.get('session');
   if (!session.isLogin) {
-    session.serverMessage = 'ログインしてください';
+    session.serverMessage = t(c, 'auth.login.required');
     await session.save();
     return c.redirect('/auth/login');
   }

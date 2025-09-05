@@ -1,5 +1,5 @@
 async function deleteMemo(memoId) {
-  if (!confirm('本当に削除しますか？')) {
+  if (!confirm(window.__I18N__['confirm.delete'])) {
     return;
   }
   const res = await fetch(`/memo/delete/${memoId}`, {

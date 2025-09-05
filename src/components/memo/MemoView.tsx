@@ -5,6 +5,8 @@ import BackButton from './BackButton.js';
 import { createButtonClass } from '../common/style.js';
 import { blueColorSet, redColorSet } from '../common/color.js';
 import ShareButton from './ShareButton.js';
+import { useRequestContext } from 'hono/jsx-renderer';
+import { t } from '../../i18n/index.js';
 
 type MemoViewProps = {
   memo: Memo;
@@ -22,6 +24,7 @@ type MemoViewProps = {
 
 const MemoView = (props: MemoViewProps) => {
   const { memo, isShareView } = props;
+  const c = useRequestContext();
 
   const containerClass = css`
     max-width: 600px;
@@ -89,16 +92,14 @@ const MemoView = (props: MemoViewProps) => {
       <div className={titleClass}>{memo.title}</div>
       <div className={bodyClass}>{memo.body}</div>
       <div className={dateClass}>
-        Updated: {formatDate(memo.updatedAt, TIMEZONE_OFFSET_JST)}
+        {t(c,'common.updated')}: {formatDate(memo.updatedAt, TIMEZONE_OFFSET_JST)}
       </div>
       <div className={dateClass}>
-        Created: {formatDate(memo.createdAt, TIMEZONE_OFFSET_JST)}
+        {t(c,'common.created')}: {formatDate(memo.createdAt, TIMEZONE_OFFSET_JST)}
       </div>
       {!isShareView && (
         <div class={bottomButtonContainerClass}>
-          <a className={buttonClass} href={`/memo/edit/${memo.id}`}>
-            編集
-          </a>
+          <a className={buttonClass} href={`/memo/edit/${memo.id}`}>{t(c, 'common.edit')}</a>
           <>
             <ShareButton memoId={memo.id} alreadyShared={!!memo.shareToken} />
             <button
@@ -106,7 +107,7 @@ const MemoView = (props: MemoViewProps) => {
               onclick={`deleteShareLink("${memo.id}")`}
               disabled={!memo.shareToken}
             >
-              共有を停止
+              {t(c, 'memo.share.stop')}
             </button>
           </>
           <BackButton />

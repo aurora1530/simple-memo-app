@@ -4,14 +4,15 @@ import { css, Style } from 'hono/css';
 import Footer from './components/common/Footer.js';
 import { createButtonClass } from './components/common/style.js';
 import { redColorSet } from './components/common/color.js';
+import { getLocale, t } from './i18n/index.js';
 
 const rootRenderer = jsxRenderer(async ({ children, title, modal }) => {
   const c = useRequestContext();
-  const session = c.get('session')
+  const session = c.get('session');
   const serverMessage = session?.serverMessage;
 
   // サーバーメッセージを表示したら削除
-  if(serverMessage){
+  if (serverMessage) {
     delete session.serverMessage;
     await session.save();
     c.set('session', session);
@@ -56,12 +57,29 @@ const rootRenderer = jsxRenderer(async ({ children, title, modal }) => {
 
   const closeButtonClass = createButtonClass(redColorSet);
 
+  const lang = getLocale(c);
+
+  const i18n = `
+          window.__I18N__ = {
+            'confirm.delete': ${JSON.stringify(t(c, 'confirm.delete'))},
+            'confirm.deleteCompletely': ${JSON.stringify(
+              t(c, 'confirm.deleteCompletely')
+            )},
+            'confirm.restore': ${JSON.stringify(t(c, 'confirm.restore'))},
+            'confirm.shareCreate': ${JSON.stringify(t(c, 'confirm.shareCreate'))},
+            'confirm.shareStop': ${JSON.stringify(t(c, 'confirm.shareStop'))},
+            'confirm.logout': ${JSON.stringify(t(c, 'confirm.logout'))},
+            'alert.copied': ${JSON.stringify(t(c, 'alert.copied'))}
+          };
+        `;
+
   return (
-    <html lang="ja">
+    <html lang={lang}>
       <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>{title}</title>
+        <script dangerouslySetInnerHTML={{ __html: i18n }} />
         <Style>
           {css`
             html,
@@ -79,17 +97,25 @@ const rootRenderer = jsxRenderer(async ({ children, title, modal }) => {
       </head>
       <body>
         <Header />
-        {serverMessage && <div class={messageContainerClass} id="server-message">{serverMessage}</div>}
+        {serverMessage && (
+          <div class={messageContainerClass} id="server-message">
+            {serverMessage}
+          </div>
+        )}
         <main>{children}</main>
         <Footer />
 
         {modal && (
-          <div id="modal" class={modalClass} onclick="closeModalOnBackground(event, true)">
+          <div
+            id="modal"
+            class={modalClass}
+            onclick="closeModalOnBackground(event, true)"
+          >
             <div class={modalContentClass} onclick="event.stopPropagation()">
               <h2>{modal.title}</h2>
               <div class={modalChildrenClass}>{modal.children}</div>
               <button class={closeButtonClass} onclick="closeModal(true)">
-                閉じる
+                {t(c, 'modal.close')}
               </button>
             </div>
           </div>

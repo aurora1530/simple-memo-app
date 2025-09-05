@@ -1,5 +1,5 @@
 async function restoreMemo(memoId) {
-  if (!confirm('本当に復元しますか？')) {
+  if (!confirm(window.__I18N__['confirm.restore'])) {
     return;
   }
   const res = await fetch(`restore/${memoId}`, {

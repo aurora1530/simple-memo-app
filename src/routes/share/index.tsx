@@ -2,6 +2,7 @@ import { Hono } from 'hono';
 import prisma from '../../prisma.js';
 import MemoView from '../../components/memo/MemoView.js';
 import { unsealMemoList } from '../../lib/memo/seal.js';
+import { t } from '../../i18n/index.js';
 
 const shareApp = new Hono();
 
@@ -35,7 +36,7 @@ shareApp.get('/view/:token', async (c) => {
   return c.render(
     <MemoView memo={unsealedMemo[0]} isShareView={true} username={user.username} />,
     {
-      title: 'メモの表示',
+      title: t(c, 'memo.show.title'),
     }
   );
 });

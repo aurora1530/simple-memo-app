@@ -3,6 +3,8 @@ import { MAX_BODY_LENGTH, MAX_TITLE_LENGTH } from '../../routes/memo/constant.js
 import BackButton from './BackButton.js';
 import { createButtonClass, errorTextClass } from '../common/style.js';
 import { blueColorSet } from '../common/color.js';
+import { useRequestContext } from 'hono/jsx-renderer';
+import { t } from '../../i18n/index.js';
 
 interface MemoFormProps {
   submitLabel: string;
@@ -82,6 +84,8 @@ const MemoForm = ({
     width: 100%;
   `;
 
+  const c = useRequestContext();
+
   return (
     <div className={formContainerClass}>
       <Style>
@@ -98,7 +102,7 @@ const MemoForm = ({
 
         <div>
           <div class={labelContainerClass}>
-            <label htmlFor="memo-title">Title</label>
+            <label htmlFor="memo-title">{t(c, 'form.title')}</label>
             <div class={charCountContainerClass}>
               <span id="title-char-count" className={charCountClass}></span>
               <span className={charCountClass}>/{MAX_TITLE_LENGTH}</span>
@@ -110,12 +114,12 @@ const MemoForm = ({
             name="title"
             id="memo-title"
             value={defaultTitle}
-            placeholder="タイトルを入力"
+            placeholder={t(c, 'form.placeholder.title')}
           />
         </div>
         <div>
           <div class={labelContainerClass}>
-            <label htmlFor="memo-body">Body</label>
+            <label htmlFor="memo-body">{t(c, 'form.body')}</label>
             <div class={charCountContainerClass}>
               <span id="body-char-count" className={charCountClass}></span>
               <span className={charCountClass}>/{MAX_BODY_LENGTH}</span>
@@ -125,7 +129,7 @@ const MemoForm = ({
             className={textareaClass}
             name="body"
             id="memo-body"
-            placeholder="メモ内容を入力"
+            placeholder={t(c, 'form.placeholder.body')}
           >
             {defaultBody}
           </textarea>

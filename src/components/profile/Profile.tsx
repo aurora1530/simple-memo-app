@@ -2,12 +2,15 @@ import type { FC } from 'hono/jsx';
 import { css, cx, Style } from 'hono/css';
 import { createButtonClass } from '../common/style.js';
 import { blueColorSet, redColorSet } from '../common/color.js';
+import { useRequestContext } from 'hono/jsx-renderer';
+import { t } from '../../i18n/index.js';
 
 interface ProfileProps {
   username: string;
 }
 
 const Profile: FC<ProfileProps> = ({ username }) => {
+  const c = useRequestContext();
   const containerClass = css`
     border: 1px solid #ccc;
     background-color: #f8f8f8;
@@ -55,23 +58,17 @@ const Profile: FC<ProfileProps> = ({ username }) => {
       <div className={nameClass}>{username}</div>
 
       <div className={linksClass}>
-        <a href="/auth/changePassword" class={blueLinkClass}>
-          パスワード変更
-        </a>
+        <a href="/auth/changePassword" class={blueLinkClass}>{t(c,'profile.changePassword')}</a>
         <a
           href="/auth/logout"
           class={redLinkClass}
-          onclick={`if (!confirm('ログアウトしますか？')) event.preventDefault();`}
+          onclick={`if (!confirm(window.__I18N__['confirm.logout'])) event.preventDefault();`}
         >
-          ログアウト
+          {t(c, 'nav.logout')}
         </a>
         <hr class={hrClass} />
-        <a href="/memo" class={blueLinkClass}>
-          メモ一覧
-        </a>
-        <a href="/memo/trash" class={redLinkClass}>
-          ゴミ箱
-        </a>
+        <a href="/memo" class={blueLinkClass}>{t(c, 'nav.memoList')}</a>
+        <a href="/memo/trash" class={redLinkClass}>{t(c, 'nav.trash')}</a>
       </div>
     </div>
   );

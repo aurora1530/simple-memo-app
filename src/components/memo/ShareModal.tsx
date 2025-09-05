@@ -1,8 +1,10 @@
+import type { Context } from 'hono';
 import type { Modal } from '../../type.js';
 import { css } from 'hono/css';
 import { createButtonClass } from '../../components/common/style.js';
 import { blueColorSet } from '../../components/common/color.js';
 import { html } from 'hono/html';
+import { t } from '../../i18n/index.js';
 
 const containerClass = css`
   margin-top: 1rem;
@@ -27,17 +29,15 @@ const inputClass = css`
 
 const copyButtonClass = createButtonClass(blueColorSet);
 
-const shareModal: Modal = {
-  title: '共有リンク',
+export const createShareModal = (c: Context): Modal => ({
+  title: t(c, 'share.title'),
   children: (
     <>
       <div className={containerClass}>
-        <p>共有リンクをコピーしてください</p>
+        <p>{t(c, 'share.copy.desc')}</p>
         <div className={linkContainerClass}>
           <input type="text" id="shareLink" className={inputClass} disabled />
-          <button className={copyButtonClass} onclick="copyShareLink()">
-            コピー
-          </button>
+          <button className={copyButtonClass} onclick="copyShareLink()">{t(c, 'share.copy')}</button>
         </div>
         {html` <script>
           function copyShareLink() {
@@ -45,13 +45,13 @@ const shareModal: Modal = {
             if (linkInput) {
               linkInput.select();
               navigator.clipboard.writeText(linkInput.value);
-              alert('コピーしました');
+              alert(window.__I18N__['alert.copied']);
             }
           }
         </script>`}
       </div>
     </>
   ),
-};
+});
 
-export default shareModal;
+export default createShareModal;

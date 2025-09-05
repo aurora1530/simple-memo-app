@@ -1,8 +1,11 @@
 import { css } from 'hono/css';
 import type { FC } from 'hono/jsx';
 import { PASSWORD_MIN_LENGTH } from '../../routes/auth/constant.js';
+import { useRequestContext } from 'hono/jsx-renderer';
+import { t } from '../../i18n/index.js';
 
 const HintBox: FC = () => {
+  const c = useRequestContext();
   const passwordHintBoxClass = css`
     width: 100%;
     background-color: rgb(237, 244, 252);
@@ -22,11 +25,11 @@ const HintBox: FC = () => {
   `;
   return (
     <div class={passwordHintBoxClass}>
-      <span>パスワードの要件:</span>
+      <span>{t(c,'auth.password.hint.title')}</span>
       <ul class={passwordHintListClass}>
-        <li>パスワードは{PASSWORD_MIN_LENGTH}文字以上で入力してください</li>
-        <li>半角英数字のみ使用可能です</li>
-        <li>英語の大文字・小文字、数字をそれぞれ1文字以上含めてください</li>
+        <li>{t(c,'auth.password.min',{min:PASSWORD_MIN_LENGTH})}</li>
+        <li>{t(c,'auth.password.alnum')}</li>
+        <li>{t(c,'auth.password.regex')}</li>
       </ul>
     </div>
   );

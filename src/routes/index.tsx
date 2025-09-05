@@ -5,6 +5,7 @@ import { css } from 'hono/css';
 import prisma from '../prisma.js';
 import profileApp from './profile/index.js';
 import shareApp from './share/index.js';
+import { t } from '../i18n/index.js';
 
 const indexApp = new Hono();
 
@@ -54,20 +55,20 @@ indexApp.get('/', (c) => {
   return c.render(
     <>
       <div class={homeContainerClass}>
-        <h1 class={homeTitleClass}>Simple Memo App</h1>
-        <p class={homeDescriptionClass}>極めてシンプルなメモアプリ。</p>
+        <h1 class={homeTitleClass}>{t(c, 'app.title')}</h1>
+        <p class={homeDescriptionClass}>{t(c, 'home.tagline')}</p>
         <div class={homeLinksClass}>
           {session.isLogin ? (
             <a class={homeButtonClass} href="/memo">
-              メモ一覧
+              {t(c, 'nav.memoList')}
             </a>
           ) : (
             <>
               <a class={homeButtonClass} href="/auth/register">
-                新規登録
+                {t(c, 'nav.register')}
               </a>
               <a class={homeButtonClass} href="/auth/login">
-                ログイン
+                {t(c, 'nav.login')}
               </a>
             </>
           )}
@@ -75,7 +76,7 @@ indexApp.get('/', (c) => {
       </div>
     </>,
     {
-      title: 'Simple Memo App',
+      title: t(c, 'app.title'),
     }
   );
 });
@@ -83,10 +84,10 @@ indexApp.get('/', (c) => {
 indexApp.get('/forbidden', (c) => {
   return c.render(
     <>
-      <h1>アクセスが許可されていません</h1>
+      <h1>{t(c, 'forbidden.heading')}</h1>
     </>,
     {
-      title: 'Forbidden',
+      title: t(c, 'forbidden.title'),
     }
   );
 });

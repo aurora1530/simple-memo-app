@@ -1,5 +1,5 @@
 async function deleteCompletelyMemo(memoId) {
-  if (!confirm('完全に削除します。本当に削除しますか？')) {
+  if (!confirm(window.__I18N__['confirm.deleteCompletely'])) {
     return;
   }
   const res = await fetch(`/memo/deleteCompletely/${memoId}`, {

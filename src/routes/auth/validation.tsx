@@ -10,22 +10,14 @@ import prisma from '../../prisma.js';
 import type { Context } from 'hono';
 import { setLogoutToSession, type AuthenticatedEnv } from '../../session.js';
 import { verifyPassword } from '../../lib/auth/password.js';
+import { t } from '../../i18n/index.js';
 
 const passwordSchema = z
   .string()
-  .min(PASSWORD_MIN_LENGTH, 'パスワードは8文字以上で入力してください')
-  .regex(
-    /^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?\d)[a-zA-Z\d]+$/,
-    'パスワードは英字の大文字・小文字、そして数字をそれぞれ1文字以上含む必要があります'
-  );
+  .min(PASSWORD_MIN_LENGTH)
+  .regex(/^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?\d)[a-zA-Z\d]+$/);
 
-const usernameSchema = z
-  .string()
-  .min(1, 'ユーザー名を入力してください')
-  .max(
-    USERNAME_MAX_LENGTH,
-    `ユーザー名は${USERNAME_MAX_LENGTH}文字以下で入力してください`
-  );
+const usernameSchema = z.string().min(1).max(USERNAME_MAX_LENGTH);
 
 export const registerValidator = zValidator(
   'form',
@@ -35,7 +27,17 @@ export const registerValidator = zValidator(
   }),
   (result, c) => {
     if (!result.success) {
-      const errorMessages = result.error.errors.map((e) => e.message);
+      const errorMessages = result.error.errors.map((e) => {
+        if (e.path?.[0] === 'username') {
+          if (e.code === 'too_small') return t(c, 'auth.username.required');
+          if (e.code === 'too_big') return t(c, 'auth.username.max', { max: USERNAME_MAX_LENGTH });
+        }
+        if (e.path?.[0] === 'password') {
+          if (e.code === 'too_small') return t(c, 'auth.password.min', { min: PASSWORD_MIN_LENGTH });
+          if (e.code === 'invalid_string') return t(c, 'auth.password.regex');
+        }
+        return e.message;
+      });
       return createRegisterForm(c, {
         errorMessages,
         defaultUsername: result.data.username,
@@ -52,7 +54,13 @@ export const loginValidator = zValidator(
   }),
   (result, c) => {
     if (!result.success) {
-      const errorMessages = result.error.errors.map((e) => e.message);
+      const errorMessages = result.error.errors.map((e) => {
+        if (e.path?.[0] === 'username') {
+          if (e.code === 'too_small') return t(c, 'auth.username.required');
+          if (e.code === 'too_big') return t(c, 'auth.username.max', { max: USERNAME_MAX_LENGTH });
+        }
+        return e.message;
+      });
       return createLoginForm(c, {
         errorMessages,
         defaultUsername: result.data.username,
@@ -84,7 +92,7 @@ export const changePasswordValidator = zValidator(
 
     if (!savedUser) {
       setLogoutToSession(session);
-      session.serverMessage = 'セッション状態が不正です。ログインし直してください。';
+      session.serverMessage = t(c, 'auth.session.invalid');
       await session.save();
       return c.redirect('/auth/login');
     }
@@ -95,7 +103,7 @@ export const changePasswordValidator = zValidator(
     );
     if (!verifyOldPasswordIsCorrect) {
       return createChangePasswordForm(c, {
-        errorMessages: ['現在のパスワードが違います'],
+        errorMessages: [t(c, 'auth.password.old.wrong')],
       });
     }
 
@@ -103,7 +111,7 @@ export const changePasswordValidator = zValidator(
       result.data.newPassword === result.data.newPasswordConfirm;
     if (!verifyNewPasswordIsEqual) {
       return createChangePasswordForm(c, {
-        errorMessages: ['新しいパスワードが一致しません'],
+        errorMessages: [t(c, 'auth.password.new.mismatch')],
       });
     }
 
@@ -114,12 +122,18 @@ export const changePasswordValidator = zValidator(
     if (!verifyNewPasswordIsDifferent) {
       // `oldPassword`が正しいことは確認済みなので、このエラーメッセージを表示しても問題ない。
       return createChangePasswordForm(c, {
-        errorMessages: ['新しいパスワードは現在のパスワードと異なる必要があります'],
+        errorMessages: [t(c, 'auth.password.new.same')],
       });
     }
 
     if (!result.success) {
-      const errorMessages = result.error.errors.map((e) => e.message);
+      const errorMessages = result.error.errors.map((e) => {
+        if (e.path?.[0] === 'newPassword') {
+          if (e.code === 'too_small') return t(c, 'auth.password.min', { min: PASSWORD_MIN_LENGTH });
+          if (e.code === 'invalid_string') return t(c, 'auth.password.regex');
+        }
+        return e.message;
+      });
       return createChangePasswordForm(c, {
         errorMessages: Array.from(new Set(errorMessages)),
       });

@@ -3,18 +3,9 @@ import { z } from 'zod';
 import MemoForm from '../../components/memo/MemoForm.js';
 import { getGraphemeCount } from '../../utils/string.js';
 import { MAX_BODY_LENGTH, MAX_TITLE_LENGTH } from './constant.js';
+import { t } from '../../i18n/index.js';
 
 type MemoValidationMode = 'create' | 'edit';
-
-const SUBMIT_LABEL = {
-  create: '新規作成',
-  edit: '更新',
-} as const satisfies Record<MemoValidationMode, string>;
-
-const TITLE_LABEL = {
-  create: 'Create Memo',
-  edit: 'メモの更新',
-} as const satisfies Record<MemoValidationMode, string>;
 
 export const memoValidation = (type: MemoValidationMode) =>
   zValidator(
@@ -22,28 +13,37 @@ export const memoValidation = (type: MemoValidationMode) =>
     z.object({
       title: z
         .string()
-        .min(1, 'タイトルを入力してください')
-        .refine((title) => getGraphemeCount(title) <= MAX_TITLE_LENGTH, {
-          message: `タイトルは${MAX_TITLE_LENGTH}文字以内で入力してください`,
-        }),
+        .min(1)
+        .refine((title) => getGraphemeCount(title) <= MAX_TITLE_LENGTH),
       body: z
         .string()
-        .min(1, '本文を入力してください')
-        .refine((body) => getGraphemeCount(body) <= MAX_BODY_LENGTH, {
-          message: `本文は${MAX_BODY_LENGTH}文字以内で入力してください`,
-        }),
+        .min(1)
+        .refine((body) => getGraphemeCount(body) <= MAX_BODY_LENGTH),
     }),
     (result, c) => {
       if (!result.success) {
-        const errorMessages = result.error.errors.map((err) => err.message);
+        const errorMessages = result.error.errors.map((err) => {
+          const path = err.path?.[0];
+          if (path === 'title') {
+            if (err.code === 'too_small') return t(c, 'form.title.required');
+            if (err.code === 'custom') return t(c, 'form.title.max', { max: MAX_TITLE_LENGTH });
+          }
+          if (path === 'body') {
+            if (err.code === 'too_small') return t(c, 'form.body.required');
+            if (err.code === 'custom') return t(c, 'form.body.max', { max: MAX_BODY_LENGTH });
+          }
+          return err.message;
+        });
+        const submitLabel = type === 'create' ? t(c,'memo.create.title') : t(c,'memo.update.title');
+        const pageTitle = submitLabel;
         return c.render(
           <MemoForm
-            submitLabel={SUBMIT_LABEL[type]}
+            submitLabel={submitLabel}
             defaultTitle={result.data.title}
             defaultBody={result.data.body}
             errorMessages={errorMessages}
           />,
-          { title: TITLE_LABEL[type] }
+          { title: pageTitle }
         );
       }
     }

@@ -6,6 +6,8 @@ import HintBox from './HintBox.js';
 import { inputClass } from './style.js';
 import PasswordInput from './PasswordInput.js';
 import type { FC } from 'hono/jsx';
+import { useRequestContext } from 'hono/jsx-renderer';
+import { t } from '../../i18n/index.js';
 
 interface FormProps {
   isRegister: boolean;
@@ -42,6 +44,7 @@ const buttonClass = cx(
 );
 
 const AuthForm = ({ isRegister, defaultUsername, errorMessages }: FormProps) => {
+  const c = useRequestContext();
   return (
     <>
       <div className={formContainerClass}>
@@ -61,9 +64,7 @@ const AuthForm = ({ isRegister, defaultUsername, errorMessages }: FormProps) => 
             placeholder="password"
           />
           {isRegister && <HintBox />}
-          <button class={buttonClass} type="submit">
-            {isRegister ? '新規登録' : 'ログイン'}
-          </button>
+          <button class={buttonClass} type="submit">{isRegister ? t(c,'nav.register') : t(c,'nav.login')}</button>
           {errorMessages && (
             <div class={errorTextClass}>
               {errorMessages.map((message) => (
@@ -87,9 +88,7 @@ export const createRegisterForm = (c: Context, options?: createOptions) => {
         ...options,
       }}
     />,
-    {
-      title: '新規登録',
-    }
+    { title: t(c, 'nav.register') }
   );
 };
 
@@ -101,9 +100,7 @@ export const createLoginForm = (c: Context, options?: createOptions) => {
         ...options,
       }}
     />,
-    {
-      title: 'ログイン',
-    }
+    { title: t(c, 'nav.login') }
   );
 };
 
@@ -112,6 +109,7 @@ interface ChangePasswordFormProps {
 }
 
 const ChangePasswordForm: FC<ChangePasswordFormProps> = ({ errorMessages }) => {
+  const c = useRequestContext();
   return (
     <>
       <div className={formContainerClass}>
@@ -132,9 +130,7 @@ const ChangePasswordForm: FC<ChangePasswordFormProps> = ({ errorMessages }) => {
             placeholder="confirm new password"
           />
           <HintBox />
-          <button class={buttonClass} type="submit">
-            パスワード変更
-          </button>
+          <button class={buttonClass} type="submit">{t(c,'profile.changePassword')}</button>
           {errorMessages && (
             <div class={errorTextClass}>
               {errorMessages.map((message) => (
@@ -152,7 +148,5 @@ export const createChangePasswordForm = (
   c: Context,
   options?: ChangePasswordFormProps
 ) => {
-  return c.render(<ChangePasswordForm {...options} />, {
-    title: 'パスワード変更',
-  });
+  return c.render(<ChangePasswordForm {...options} />, { title: t(c, 'profile.changePassword') });
 };

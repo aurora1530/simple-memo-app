@@ -3,6 +3,8 @@ import { formatDate, TIMEZONE_OFFSET_JST } from '../../utils/date.js';
 import { css, cx } from 'hono/css';
 import { createButtonClass } from '../common/style.js';
 import { blueColorSet, greenColorSet, redColorSet } from '../common/color.js';
+import { useRequestContext } from 'hono/jsx-renderer';
+import { t } from '../../i18n/index.js';
 
 interface MemoListProps {
   memos: Memo[];
@@ -130,10 +132,12 @@ const MemoList = async ({ memos, mode }: MemoListProps) => {
     margin-top: 2rem;
   `;
 
+  const c = useRequestContext();
+
   if (memos.length === 0) {
     return (
       <div class={noMemoMessageClass}>
-        <p>メモがありません。</p>
+        <p>{t(c, 'memo.empty')}</p>
       </div>
     );
   }
@@ -163,25 +167,23 @@ const MemoList = async ({ memos, mode }: MemoListProps) => {
             <div class={memoBodyClass}>{cutDownedBody(memo.body)}</div>
             <div class={dateContainerClass}>
               <div class={cx(memoDatesClass, memoUpdatedAtClass)}>
-                Updated: {formatDate(memo.updatedAt, TIMEZONE_OFFSET_JST)}
+                {t(c, 'common.updated')}: {formatDate(memo.updatedAt, TIMEZONE_OFFSET_JST)}
               </div>
               <div class={cx(memoDatesClass, memoCreatedAtClass)}>
-                Created: {formatDate(memo.createdAt, TIMEZONE_OFFSET_JST)}
+                {t(c, 'common.created')}: {formatDate(memo.createdAt, TIMEZONE_OFFSET_JST)}
               </div>
             </div>
             <div class={memoActionsClass}>
               {mode === 'list' ? (
                 // 一覧表示の場合
                 <>
-                  <a class={editButtonClass} href={`/memo/edit/${memo.id}`}>
-                    編集
-                  </a>
-                  {alreadyShared && <span class={sharingButtonClass}>共有中</span>}
+                  <a class={editButtonClass} href={`/memo/edit/${memo.id}`}>{t(c, 'common.edit')}</a>
+                  {alreadyShared && <span class={sharingButtonClass}>{t(c, 'memo.shared')}</span>}
                   <button
                     class={deleteButtonClass}
                     onclick={`deleteMemo("${memo.id}");event.stopPropagation();`}
                   >
-                    削除
+                    {t(c, 'common.delete')}
                   </button>
                 </>
               ) : (
@@ -191,13 +193,13 @@ const MemoList = async ({ memos, mode }: MemoListProps) => {
                     class={restoreButtonClass}
                     onclick={`restoreMemo("${memo.id}");event.stopPropagation();`}
                   >
-                    復元
+                    {t(c, 'memo.restore')}
                   </button>
                   <button
                     class={deleteButtonClass}
                     onclick={`deleteCompletelyMemo("${memo.id}");event.stopPropagation();`}
                   >
-                    完全に削除
+                    {t(c, 'memo.deleteCompletely')}
                   </button>
                 </>
               )}

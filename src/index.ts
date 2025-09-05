@@ -9,6 +9,8 @@ import rootRenderer from './renderer.js'
 import { compress } from 'hono/compress'
 import { ORIGIN, PORT } from './constant.js'
 import { csrf } from 'hono/csrf'
+import { t } from './i18n/index.js'
+import { i18nMiddleware } from './i18n/middleware.js'
 
 const app = new Hono()
 
@@ -20,6 +22,7 @@ app.use(
     referrerPolicy: 'strict-origin-when-cross-origin',
   })
 );
+app.use(i18nMiddleware);
 // Additional CSP
 app.use(async (c, next) => {
   c.header(
@@ -44,15 +47,15 @@ app.route('/', indexApp);
 app
   .notFound((c) => {
     c.status(404);
-    return c.render('ページが見つかりませんでした。code: 404 Not Found', {
-      title: '404 Not Found',
+    return c.render(t(c, 'notFound.message'), {
+      title: t(c, 'notFound.title'),
     });
   })
   .onError((err, c) => {
     console.error(err);
     c.status(500);
-    return c.render('エラーが発生しました。code: 500 Internal Server Error', {
-      title: '500 Internal Server Error',
+    return c.render(t(c, 'error.message'), {
+      title: t(c, 'error.title'),
     });
   });
 
