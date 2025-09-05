@@ -4,7 +4,19 @@ import MemoForm from '../../components/memo/MemoForm.js';
 import { getGraphemeCount } from '../../utils/string.js';
 import { MAX_BODY_LENGTH, MAX_TITLE_LENGTH } from './constant.js';
 
-export const memoValidation = (type: 'create' | 'edit') =>
+type MemoValidationMode = 'create' | 'edit';
+
+const SUBMIT_LABEL = {
+  create: '新規作成',
+  edit: '更新',
+} as const satisfies Record<MemoValidationMode, string>;
+
+const TITLE_LABEL = {
+  create: 'Create Memo',
+  edit: 'メモの更新',
+} as const satisfies Record<MemoValidationMode, string>;
+
+export const memoValidation = (type: MemoValidationMode) =>
   zValidator(
     'form',
     z.object({
@@ -26,14 +38,12 @@ export const memoValidation = (type: 'create' | 'edit') =>
         const errorMessages = result.error.errors.map((err) => err.message);
         return c.render(
           <MemoForm
-            submitLabel={type === 'create' ? '新規作成' : '更新'}
+            submitLabel={SUBMIT_LABEL[type]}
             defaultTitle={result.data.title}
             defaultBody={result.data.body}
             errorMessages={errorMessages}
           />,
-          {
-            title: type === 'create' ? 'Create Memo' : 'メモの更新',
-          }
+          { title: TITLE_LABEL[type] }
         );
       }
     }
