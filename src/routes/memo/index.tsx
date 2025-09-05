@@ -5,11 +5,19 @@ import MemoList from '../../components/memo/MemoList.js';
 import MemoForm from '../../components/memo/MemoForm.js';
 import { memoValidation } from './validation.js';
 import { css, cx } from 'hono/css';
-import { sealMemoTitleAndBody, unsealMemoTitleAndBody, unsealMemoList } from '../../lib/memo/seal.js';
-import { MAX_MEMO_COUNT } from './constant.js';
+import {
+  sealMemoTitleAndBody,
+  unsealMemoTitleAndBody,
+  unsealMemoList,
+} from '../../lib/memo/seal.js';
+import { MAX_MEMO_COUNT, DEFAULT_PER_PAGE, MAX_PER_PAGE } from './constant.js';
 import MemoView from '../../components/memo/MemoView.js';
 import { createButtonClass } from '../../components/common/style.js';
-import { blueColorSet, redColorSet } from '../../components/common/color.js';
+import {
+  blueColorSet,
+  redColorSet,
+  grayColorSet,
+} from '../../components/common/color.js';
 import { createShareLink, createToken } from '../../lib/memo/token.js';
 import shareModal from '../../components/memo/ShareModal.js';
 
@@ -37,21 +45,186 @@ const topContainerClass = css`
   margin-top: 20px;
 `;
 
+const parsePositiveInt = (value: string | undefined, fallback: number, max?: number) => {
+  const n = Number(value ?? '');
+  if (!Number.isFinite(n) || n <= 0) return fallback;
+  const int = Math.floor(n);
+  return max ? Math.min(int, max) : int;
+};
+
+// Pagination styles and renderer
+const paginationContainerClass = css`
+  display: flex;
+  justify-content: center;
+  margin: 24px 0;
+`;
+
+const paginationListClass = css`
+  list-style: none;
+  display: flex;
+  gap: 8px;
+  padding: 0;
+  margin: 0;
+  flex-wrap: wrap;
+`;
+
+const pageLinkClass = cx(
+  createButtonClass(blueColorSet),
+  css`
+    padding: 6px 10px;
+    font-size: 0.9rem;
+  `
+);
+
+const pageActiveClass = cx(
+  createButtonClass(grayColorSet),
+  css`
+    pointer-events: none;
+  `
+);
+
+const pageDisabledClass = cx(
+  createButtonClass(grayColorSet),
+  css`
+    opacity: 0.6;
+    pointer-events: none;
+  `
+);
+
+const getPageNumbers = (current: number, total: number) => {
+  const pages: (number | string)[] = [];
+  const window = 2;
+  const add = (p: number | string) => pages.push(p);
+  if (total <= 7) {
+    for (let i = 1; i <= total; i++) add(i);
+  } else {
+    add(1);
+    const start = Math.max(2, current - window);
+    const end = Math.min(total - 1, current + window);
+    if (start > 2) add('…');
+    for (let i = start; i <= end; i++) add(i);
+    if (end < total - 1) add('…');
+    add(total);
+  }
+  return pages;
+};
+
+const buildUrl = (base: string, page: number, perPage: number) =>
+  `${base}?page=${page}&perPage=${perPage}`;
+
+const renderPagination = (
+  basePath: string,
+  page: number,
+  perPage: number,
+  totalPages: number
+) => {
+  const prevDisabled = page <= 1;
+  const nextDisabled = page >= totalPages;
+  const numbers = getPageNumbers(page, totalPages);
+  return (
+    <nav class={paginationContainerClass} aria-label="pagination">
+      <ul class={paginationListClass}>
+        <li>
+          <a
+            class={prevDisabled ? pageDisabledClass : pageLinkClass}
+            href={buildUrl(basePath, 1, perPage)}
+            aria-disabled={prevDisabled}
+            tabindex={prevDisabled ? -1 : 0}
+          >
+            « 最初
+          </a>
+        </li>
+        <li>
+          <a
+            class={prevDisabled ? pageDisabledClass : pageLinkClass}
+            href={buildUrl(basePath, Math.max(1, page - 1), perPage)}
+            aria-disabled={prevDisabled}
+            tabindex={prevDisabled ? -1 : 0}
+          >
+            ‹ 前
+          </a>
+        </li>
+        {numbers.map((p) => (
+          <li>
+            {typeof p === 'number' ? (
+              p === page ? (
+                <span class={pageActiveClass} aria-current="page">
+                  {p}
+                </span>
+              ) : (
+                <a class={pageLinkClass} href={buildUrl(basePath, p, perPage)}>
+                  {p}
+                </a>
+              )
+            ) : (
+              <span class={pageDisabledClass} aria-hidden="true">
+                {p}
+              </span>
+            )}
+          </li>
+        ))}
+        <li>
+          <a
+            class={nextDisabled ? pageDisabledClass : pageLinkClass}
+            href={buildUrl(basePath, Math.min(totalPages, page + 1), perPage)}
+            aria-disabled={nextDisabled}
+            tabindex={nextDisabled ? -1 : 0}
+          >
+            次 ›
+          </a>
+        </li>
+        <li>
+          <a
+            class={nextDisabled ? pageDisabledClass : pageLinkClass}
+            href={buildUrl(basePath, totalPages, perPage)}
+            aria-disabled={nextDisabled}
+            tabindex={nextDisabled ? -1 : 0}
+          >
+            最後 »
+          </a>
+        </li>
+      </ul>
+    </nav>
+  );
+};
+
 memoApp
   .get('/', async (c) => {
     const session = c.get('session');
 
-    const memos = await prisma.memo.findMany({
-      where: {
-        userId: session.user.id,
-        deleted: false,
-      },
-      orderBy: {
-        updatedAt: 'desc',
-      },
-    });
+    const page = parsePositiveInt(c.req.query('page'), 1);
+    const perPage = parsePositiveInt(
+      c.req.query('perPage'),
+      DEFAULT_PER_PAGE,
+      MAX_PER_PAGE
+    );
+    const skip = (page - 1) * perPage;
+
+    const [totalCount, memos] = await Promise.all([
+      prisma.memo.count({
+        where: {
+          userId: session.user.id,
+          deleted: false,
+        },
+      }),
+      prisma.memo.findMany({
+        where: {
+          userId: session.user.id,
+          deleted: false,
+        },
+        orderBy: {
+          updatedAt: 'desc',
+        },
+        skip,
+        take: perPage,
+      }),
+    ]);
 
     const unsealedMemoList = await unsealMemoList(c, memos);
+    const totalPages = Math.max(1, Math.ceil(totalCount / perPage));
+    const clampedPage = Math.min(page, totalPages);
+
+    const pagination = renderPagination('/memo', clampedPage, perPage, totalPages);
 
     return c.render(
       <>
@@ -63,8 +236,10 @@ memoApp
           <a href="/memo/trash" class={trashMemoButtonClass}>
             ゴミ箱
           </a>
+          {pagination}
         </div>
         <MemoList memos={unsealedMemoList} mode="list" />
+        {pagination}
       </>,
       {
         title: 'メモ',
@@ -225,17 +400,39 @@ memoApp
   .get('trash', async (c) => {
     const session = c.get('session');
 
-    const memos = await prisma.memo.findMany({
-      where: {
-        userId: session.user.id,
-        deleted: true,
-      },
-      orderBy: {
-        updatedAt: 'desc',
-      },
-    });
+    const page = parsePositiveInt(c.req.query('page'), 1);
+    const perPage = parsePositiveInt(
+      c.req.query('perPage'),
+      DEFAULT_PER_PAGE,
+      MAX_PER_PAGE
+    );
+    const skip = (page - 1) * perPage;
+
+    const [totalCount, memos] = await Promise.all([
+      prisma.memo.count({
+        where: {
+          userId: session.user.id,
+          deleted: true,
+        },
+      }),
+      prisma.memo.findMany({
+        where: {
+          userId: session.user.id,
+          deleted: true,
+        },
+        orderBy: {
+          updatedAt: 'desc',
+        },
+        skip,
+        take: perPage,
+      }),
+    ]);
 
     const unsealedMemoList = await unsealMemoList(c, memos);
+    const totalPages = Math.max(1, Math.ceil(totalCount / perPage));
+    const clampedPage = Math.min(page, totalPages);
+
+    const pagination = renderPagination('/memo/trash', clampedPage, perPage, totalPages);
 
     return c.render(
       <>
@@ -247,8 +444,10 @@ memoApp
           <a href="/memo" class={createMemoButtonClass}>
             メモ一覧
           </a>
+          {pagination}
         </div>
         <MemoList memos={unsealedMemoList} mode="trash" />
+        {pagination}
       </>,
       {
         title: 'ゴミ箱',
