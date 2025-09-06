@@ -29,7 +29,6 @@ const HintBox: FC = () => {
       <ul class={passwordHintListClass}>
         <li>{t(c,'auth.password.min',{min:PASSWORD_MIN_LENGTH})}</li>
         <li>{t(c,'auth.password.alnum')}</li>
-        <li>{t(c,'auth.password.regex')}</li>
       </ul>
     </div>
   );

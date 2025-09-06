@@ -15,7 +15,7 @@ import { t } from '../../i18n/index.js';
 const passwordSchema = z
   .string()
   .min(PASSWORD_MIN_LENGTH)
-  .regex(/^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?\d)[a-zA-Z\d]+$/);
+  .regex(/^[A-Za-z0-9]+$/);
 
 const usernameSchema = z.string().min(1).max(USERNAME_MAX_LENGTH);
 
