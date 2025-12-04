@@ -1,9 +1,9 @@
 import { zValidator } from '@hono/zod-validator';
 import { z } from 'zod';
-import MemoForm from '../../components/memo/MemoForm.tsx';
-import { getGraphemeCount } from '../../utils/string.ts';
-import { MAX_BODY_LENGTH, MAX_TITLE_LENGTH } from './constant.ts';
-import { t } from '../../i18n/index.ts';
+import MemoForm from '../../components/memo/MemoForm.js';
+import { getGraphemeCount } from '../../utils/string.js';
+import { MAX_BODY_LENGTH, MAX_TITLE_LENGTH } from './constant.js';
+import { t } from '../../i18n/index.js';
 
 type MemoValidationMode = 'create' | 'edit';
 

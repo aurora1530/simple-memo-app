@@ -1,6 +1,6 @@
 import type { Memo } from '@prisma/client';
 import type { Context } from 'hono';
-import { seal, unseal } from '../../seal.ts';
+import { seal, unseal } from '../../seal.js';
 
 type TitleAndBody = Pick<Memo, 'title' | 'body'>;
 type SealMode = 'seal' | 'unseal';

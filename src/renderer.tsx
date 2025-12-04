@@ -1,10 +1,10 @@
 import { jsxRenderer, useRequestContext } from 'hono/jsx-renderer';
-import Header from './components/common/Header.tsx';
+import Header from './components/common/Header.js';
 import { css, Style } from 'hono/css';
-import Footer from './components/common/Footer.tsx';
-import { createButtonClass } from './components/common/style.tsx';
-import { redColorSet } from './components/common/color.ts';
-import { getLocale, t } from './i18n/index.ts';
+import Footer from './components/common/Footer.js';
+import { createButtonClass } from './components/common/style.js';
+import { redColorSet } from './components/common/color.js';
+import { getLocale, t } from './i18n/index.js';
 
 const rootRenderer = jsxRenderer(async ({ children, title, modal }) => {
   const c = useRequestContext();

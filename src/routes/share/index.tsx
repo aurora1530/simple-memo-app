@@ -1,8 +1,8 @@
 import { Hono } from 'hono';
-import prisma from '../../prisma.ts';
-import MemoView from '../../components/memo/MemoView.tsx';
-import { unsealMemoList } from '../../lib/memo/seal.ts';
-import { t } from '../../i18n/index.ts';
+import prisma from '../../prisma.js';
+import MemoView from '../../components/memo/MemoView.js';
+import { unsealMemoList } from '../../lib/memo/seal.js';
+import { t } from '../../i18n/index.js';
 
 const shareApp = new Hono();
 

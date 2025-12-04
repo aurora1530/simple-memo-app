@@ -1,12 +1,12 @@
 import { css, cx } from 'hono/css';
 import type { Memo } from '@prisma/client';
-import { formatDate, TIMEZONE_OFFSET_JST } from '../../utils/date.ts';
-import BackButton from './BackButton.tsx';
-import { createButtonClass } from '../common/style.tsx';
-import { blueColorSet, redColorSet } from '../common/color.ts';
-import ShareButton from './ShareButton.tsx';
+import { formatDate, TIMEZONE_OFFSET_JST } from '../../utils/date.js';
+import BackButton from './BackButton.js';
+import { createButtonClass } from '../common/style.js';
+import { blueColorSet, redColorSet } from '../common/color.js';
+import ShareButton from './ShareButton.js';
 import { useRequestContext } from 'hono/jsx-renderer';
-import { t } from '../../i18n/index.ts';
+import { t } from '../../i18n/index.js';
 
 type MemoViewProps = {
   memo: Memo;

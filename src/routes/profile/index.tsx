@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
-import { ensureAuthenticatedMiddleware, type AuthenticatedEnv } from '../../session.ts';
-import Profile from '../../components/profile/Profile.tsx';
-import { t } from '../../i18n/index.ts';
+import { ensureAuthenticatedMiddleware, type AuthenticatedEnv } from '../../session.js';
+import Profile from '../../components/profile/Profile.js';
+import { t } from '../../i18n/index.js';
 
 const profileApp = new Hono<AuthenticatedEnv>();
 profileApp.use(ensureAuthenticatedMiddleware);

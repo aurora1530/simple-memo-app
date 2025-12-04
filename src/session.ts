@@ -1,7 +1,7 @@
 import { env } from 'hono/adapter';
 import { createMiddleware } from 'hono/factory';
 import { getIronSession, type IronSession } from 'iron-session';
-import { t } from './i18n/index.ts';
+import { t } from './i18n/index.js';
 
 type UserData = {
   id: number;

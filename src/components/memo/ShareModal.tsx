@@ -1,10 +1,10 @@
 import type { Context } from 'hono';
-import type { Modal } from '../../type.ts';
+import type { Modal } from '../../type.js';
 import { css } from 'hono/css';
-import { createButtonClass } from '../../components/common/style.tsx';
-import { blueColorSet } from '../../components/common/color.ts';
+import { createButtonClass } from '../../components/common/style.js';
+import { blueColorSet } from '../../components/common/color.js';
 import { html } from 'hono/html';
-import { t } from '../../i18n/index.ts';
+import { t } from '../../i18n/index.js';
 
 const containerClass = css`
   margin-top: 1rem;

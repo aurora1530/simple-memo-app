@@ -1,8 +1,8 @@
 import { css } from 'hono/css';
 import type { FC } from 'hono/jsx';
-import { PASSWORD_MIN_LENGTH } from '../../routes/auth/constant.ts';
+import { PASSWORD_MIN_LENGTH } from '../../routes/auth/constant.js';
 import { useRequestContext } from 'hono/jsx-renderer';
-import { t } from '../../i18n/index.ts';
+import { t } from '../../i18n/index.js';
 
 const HintBox: FC = () => {
   const c = useRequestContext();

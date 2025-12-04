@@ -1,5 +1,5 @@
 import { css } from 'hono/css';
-import type { ButtonColorSet } from './color.ts';
+import type { ButtonColorSet } from './color.js';
 
 type CreateButtonClassProps = {} & ButtonColorSet;
 

@@ -1,7 +1,7 @@
 import { createMiddleware } from 'hono/factory';
 import type { Context } from 'hono';
 import { getCookie, setCookie } from 'hono/cookie';
-import type { Locale } from './index.ts';
+import type { Locale } from './index.js';
 
 const isLocale = (v: string | undefined): v is Locale => v === 'ja' || v === 'en';
 
