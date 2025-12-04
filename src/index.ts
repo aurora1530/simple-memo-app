@@ -9,10 +9,12 @@ import { ORIGIN, PORT } from './constant.js'
 import { csrf } from 'hono/csrf'
 import { t } from './i18n/index.js'
 import { i18nMiddleware } from './i18n/middleware.js'
+import { serveStatic } from '@hono/node-server/serve-static'
 
 const app = new Hono()
 
 app.use(logger());
+app.use('/public/*', serveStatic({ root: './' }));
 app.use(compress())
 app.use(
   secureHeaders({
