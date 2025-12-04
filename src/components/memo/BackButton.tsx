@@ -1,9 +1,9 @@
 import { css } from 'hono/css';
 import type { FC } from 'hono/jsx';
-import { createButtonClass } from '../common/style.js';
-import { grayColorSet } from '../common/color.js';
+import { createButtonClass } from '../common/style.tsx';
+import { grayColorSet } from '../common/color.ts';
 import { useRequestContext } from 'hono/jsx-renderer';
-import { t } from '../../i18n/index.js';
+import { t } from '../../i18n/index.ts';
 
 const BackButton: FC = () => {
   const backButtonClass = createButtonClass(grayColorSet);

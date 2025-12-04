@@ -1,10 +1,10 @@
 import { css, Style } from 'hono/css';
-import { MAX_BODY_LENGTH, MAX_TITLE_LENGTH } from '../../routes/memo/constant.js';
-import BackButton from './BackButton.js';
-import { createButtonClass, errorTextClass } from '../common/style.js';
-import { blueColorSet } from '../common/color.js';
+import { MAX_BODY_LENGTH, MAX_TITLE_LENGTH } from '../../routes/memo/constant.ts';
+import BackButton from './BackButton.tsx';
+import { createButtonClass, errorTextClass } from '../common/style.tsx';
+import { blueColorSet } from '../common/color.ts';
 import { useRequestContext } from 'hono/jsx-renderer';
-import { t } from '../../i18n/index.js';
+import { t } from '../../i18n/index.ts';
 
 interface MemoFormProps {
   submitLabel: string;

@@ -1,11 +1,11 @@
 import { Hono } from 'hono';
-import authApp from './auth/index.js';
-import memoApp from './memo/index.js';
+import authApp from './auth/index.tsx';
+import memoApp from './memo/index.tsx';
 import { css } from 'hono/css';
-import prisma from '../prisma.js';
-import profileApp from './profile/index.js';
-import shareApp from './share/index.js';
-import { t } from '../i18n/index.js';
+import prisma from '../prisma.ts';
+import profileApp from './profile/index.tsx';
+import shareApp from './share/index.tsx';
+import { t } from '../i18n/index.ts';
 
 const indexApp = new Hono();
 

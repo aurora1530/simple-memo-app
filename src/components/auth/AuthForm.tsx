@@ -1,13 +1,13 @@
 import type { Context } from 'hono';
 import { css, cx } from 'hono/css';
-import { createButtonClass, errorTextClass } from '../common/style.js';
-import { blueColorSet } from '../common/color.js';
-import HintBox from './HintBox.js';
-import { inputClass } from './style.js';
-import PasswordInput from './PasswordInput.js';
+import { createButtonClass, errorTextClass } from '../common/style.tsx';
+import { blueColorSet } from '../common/color.ts';
+import HintBox from './HintBox.tsx';
+import { inputClass } from './style.ts';
+import PasswordInput from './PasswordInput.tsx';
 import type { FC } from 'hono/jsx';
 import { useRequestContext } from 'hono/jsx-renderer';
-import { t } from '../../i18n/index.js';
+import { t } from '../../i18n/index.ts';
 
 interface FormProps {
   isRegister: boolean;

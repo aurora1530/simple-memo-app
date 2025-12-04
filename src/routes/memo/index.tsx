@@ -1,26 +1,26 @@
 import { Hono } from 'hono';
-import { ensureAuthenticatedMiddleware, type AuthenticatedEnv } from '../../session.js';
-import prisma from '../../prisma.js';
-import MemoList from '../../components/memo/MemoList.js';
-import MemoForm from '../../components/memo/MemoForm.js';
-import { memoValidation } from './validation.js';
+import { ensureAuthenticatedMiddleware, type AuthenticatedEnv } from '../../session.ts';
+import prisma from '../../prisma.ts';
+import MemoList from '../../components/memo/MemoList.tsx';
+import MemoForm from '../../components/memo/MemoForm.tsx';
+import { memoValidation } from './validation.tsx';
 import { css, cx } from 'hono/css';
 import {
   sealMemoTitleAndBody,
   unsealMemoTitleAndBody,
   unsealMemoList,
-} from '../../lib/memo/seal.js';
-import { MAX_MEMO_COUNT, DEFAULT_PER_PAGE, MAX_PER_PAGE } from './constant.js';
-import MemoView from '../../components/memo/MemoView.js';
-import { createButtonClass } from '../../components/common/style.js';
+} from '../../lib/memo/seal.ts';
+import { MAX_MEMO_COUNT, DEFAULT_PER_PAGE, MAX_PER_PAGE } from './constant.ts';
+import MemoView from '../../components/memo/MemoView.tsx';
+import { createButtonClass } from '../../components/common/style.tsx';
 import {
   blueColorSet,
   redColorSet,
   grayColorSet,
-} from '../../components/common/color.js';
-import { createShareLink, createToken } from '../../lib/memo/token.js';
-import { t } from '../../i18n/index.js';
-import createShareModal from '../../components/memo/ShareModal.js';
+} from '../../components/common/color.ts';
+import { createShareLink, createToken } from '../../lib/memo/token.ts';
+import { t } from '../../i18n/index.ts';
+import createShareModal from '../../components/memo/ShareModal.tsx';
 
 const memoApp = new Hono<AuthenticatedEnv>();
 memoApp.use(ensureAuthenticatedMiddleware);

@@ -4,13 +4,13 @@ import {
   createChangePasswordForm,
   createLoginForm,
   createRegisterForm,
-} from '../../components/auth/AuthForm.js';
-import { PASSWORD_MIN_LENGTH, USERNAME_MAX_LENGTH } from './constant.js';
-import prisma from '../../prisma.js';
+} from '../../components/auth/AuthForm.tsx';
+import { PASSWORD_MIN_LENGTH, USERNAME_MAX_LENGTH } from './constant.ts';
+import prisma from '../../prisma.ts';
 import type { Context } from 'hono';
-import { setLogoutToSession, type AuthenticatedEnv } from '../../session.js';
-import { verifyPassword } from '../../lib/auth/password.js';
-import { t } from '../../i18n/index.js';
+import { setLogoutToSession, type AuthenticatedEnv } from '../../session.ts';
+import { verifyPassword } from '../../lib/auth/password.ts';
+import { t } from '../../i18n/index.ts';
 
 const passwordSchema = z
   .string()

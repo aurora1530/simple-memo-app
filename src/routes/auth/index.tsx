@@ -1,22 +1,22 @@
 import { Hono } from 'hono';
-import prisma from '../../prisma.js';
+import prisma from '../../prisma.ts';
 import {
   createChangePasswordForm,
   createLoginForm,
   createRegisterForm,
-} from '../../components/auth/AuthForm.js';
+} from '../../components/auth/AuthForm.tsx';
 import {
   changePasswordValidator,
   loginValidator,
   registerValidator,
-} from './validation.js';
+} from './validation.tsx';
 import {
   type AuthenticatedEnv,
   ensureAuthenticatedMiddleware,
   setLogoutToSession,
-} from '../../session.js';
-import { generatePasswordHash, verifyPassword } from '../../lib/auth/password.js';
-import { t } from '../../i18n/index.js';
+} from '../../session.ts';
+import { generatePasswordHash, verifyPassword } from '../../lib/auth/password.ts';
+import { t } from '../../i18n/index.ts';
 
 const authApp = new Hono();
 

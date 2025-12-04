@@ -1,10 +1,10 @@
 import type { Memo } from '@prisma/client';
-import { formatDate, TIMEZONE_OFFSET_JST } from '../../utils/date.js';
+import { formatDate, TIMEZONE_OFFSET_JST } from '../../utils/date.ts';
 import { css, cx } from 'hono/css';
-import { createButtonClass } from '../common/style.js';
-import { blueColorSet, greenColorSet, redColorSet } from '../common/color.js';
+import { createButtonClass } from '../common/style.tsx';
+import { blueColorSet, greenColorSet, redColorSet } from '../common/color.ts';
 import { useRequestContext } from 'hono/jsx-renderer';
-import { t } from '../../i18n/index.js';
+import { t } from '../../i18n/index.ts';
 
 interface MemoListProps {
   memos: Memo[];

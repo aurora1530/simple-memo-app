@@ -1,7 +1,7 @@
 import { css, Style } from 'hono/css';
 import type { FC } from 'hono/jsx';
 import { useRequestContext } from 'hono/jsx-renderer';
-import { t } from '../../i18n/index.js';
+import { t } from '../../i18n/index.ts';
 
 const Header: FC = async () => {
   const c = useRequestContext();

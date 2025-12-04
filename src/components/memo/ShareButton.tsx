@@ -1,8 +1,8 @@
 import type { FC } from 'hono/jsx';
-import { greenColorSet } from '../common/color.js';
-import { createButtonClass } from '../common/style.js';
+import { greenColorSet } from '../common/color.ts';
+import { createButtonClass } from '../common/style.tsx';
 import { useRequestContext } from 'hono/jsx-renderer';
-import { t } from '../../i18n/index.js';
+import { t } from '../../i18n/index.ts';
 
 interface ShareButtonProps {
   memoId: string;

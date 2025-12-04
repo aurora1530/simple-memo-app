@@ -1,6 +1,6 @@
 import type { FC } from 'hono/jsx';
-import { PASSWORD_MIN_LENGTH } from '../../routes/auth/constant.js';
-import { inputClass } from './style.js';
+import { PASSWORD_MIN_LENGTH } from '../../routes/auth/constant.ts';
+import { inputClass } from './style.ts';
 
 interface PasswordInputProps {
   autocomplete: 'new-password' | 'current-password';
