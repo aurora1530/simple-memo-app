@@ -6,7 +6,8 @@
     "build": "tsc",
     "db:sample": "tsx sample/main.ts",
     "db:dev-init": "prisma migrate reset && run-p dev db:sample",
-    "test": "node --test --import tsx \"test/**/*.test.ts\""
+    "test": "node --test --import tsx \"test/**/*.test.ts\"",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@hono/node-server": "^1.13.8",
