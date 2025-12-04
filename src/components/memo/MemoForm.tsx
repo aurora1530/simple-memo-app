@@ -148,7 +148,7 @@ const MemoForm = ({
           </div>
         )}
       </form>
-      <script src="/public/memoForm.js"></script>
+      <script src="/memoForm.js"></script>
     </div>
   );
 };

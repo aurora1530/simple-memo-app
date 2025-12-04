@@ -17,7 +17,7 @@ const ShareButton: FC<ShareButtonProps> = ({ memoId, alreadyShared }) => {
       <button class={buttonClass} onclick={`createShareLink("${memoId}", ${alreadyShared})`}>
         {t(c, 'memo.share')}
       </button>
-      <script src="/public/memoShare.js"></script>
+      <script src="/memoShare.js"></script>
     </>
   );
 };

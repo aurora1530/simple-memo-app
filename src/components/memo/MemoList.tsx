@@ -208,11 +208,11 @@ const MemoList = async ({ memos, mode }: MemoListProps) => {
         );
       })}
       {mode === 'list' ? (
-        <script src="/public/memoDelete.js" />
+        <script src="/memoDelete.js" />
       ) : (
         <>
-          <script src="/public/memoRestore.js" />
-          <script src="/public/memoDeleteCompletely.js" />
+          <script src="/memoRestore.js" />
+          <script src="/memoDeleteCompletely.js" />
         </>
       )}
     </div>

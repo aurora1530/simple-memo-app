@@ -120,8 +120,8 @@ const rootRenderer = jsxRenderer(async ({ children, title, modal }) => {
             </div>
           </div>
         )}
-        <script src="/public/common.js"></script>
-        {modal && <script src="/public/modal.js"></script>}
+        <script src="/common.js"></script>
+        {modal && <script src="/modal.js"></script>}
       </body>
     </html>
   );
